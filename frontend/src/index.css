@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cho phép animate góc của conic-gradient (viền LED chạy) */
+@property --led-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #d7e3f4;
+  background-color: #070b16;
+  /* Lưới + đốm sáng nền kiểu gaming */
+  background-image:
+    radial-gradient(900px circle at 15% -10%, rgba(34, 245, 224, 0.12), transparent 45%),
+    radial-gradient(800px circle at 100% 0%, rgba(168, 85, 247, 0.12), transparent 45%),
+    radial-gradient(700px circle at 50% 120%, rgba(255, 45, 146, 0.1), transparent 45%),
+    linear-gradient(rgba(34, 245, 224, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 245, 224, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 38px 38px, 38px 38px;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes led-spin {
+  to {
+    --led-angle: 360deg;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.4; }
+}
+
+@layer components {
+  /* ===== Viền LED — chỉ sáng & chạy khi hover ===== */
+  .led {
+    position: relative;
+    border-radius: 16px;
+    background: #0d1426;
+    isolation: isolate;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    transition: border-color 0.3s ease;
+  }
+  .led::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--led-angle),
+      #22f5e0,
+      #3a86ff,
+      #a855f7,
+      #3a86ff,
+      #22f5e0
+    );
+    /* chỉ hiện phần viền */
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: led-spin 4s linear infinite;
+    animation-play-state: paused;
+    z-index: -1;
+  }
+  .led::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--led-angle),
+      #22f5e0,
+      #3a86ff,
+      #a855f7,
+      #3a86ff,
+      #22f5e0
+    );
+    filter: blur(16px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: led-spin 4s linear infinite;
+    animation-play-state: paused;
+    z-index: -2;
+  }
+  /* Hover: viền nền mờ đi, LED bật sáng + bắt đầu chạy */
+  .led:hover {
+    border-color: transparent;
+  }
+  .led:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  .led:hover::after {
+    opacity: 0.5;
+    animation-play-state: running;
+  }
+  .led-slow::before,
+  .led-slow::after { animation-duration: 7s; }
+
+  .card {
+    @apply led p-5 text-slate-200;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center gap-2 rounded-lg bg-neon-cyan px-4 py-2 text-sm font-semibold text-base shadow-neon transition hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg border border-neon-cyan/40 bg-neon-cyan/5 px-4 py-2 text-sm font-medium text-neon-cyan transition hover:bg-neon-cyan/15 hover:shadow-neon;
+  }
+  .input {
+    @apply w-full rounded-lg border border-white/10 bg-panel2/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-neon-cyan/60 focus:ring-2 focus:ring-neon-cyan/20;
+  }
+  .chip {
+    @apply rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-slate-300;
+  }
+}

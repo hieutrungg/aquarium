@@ -1,0 +1,25 @@
+# deps / build
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# Godot
+game/.godot/
+game/build/
+*.import.tmp
+
+# AI raw outputs (không commit)
+art/raw/
+tools/**/out/
+
+# Godot web export (build lại được)
+frontend/public/aquarium/
+
+# local Claude settings
+.claude/settings.local.json
