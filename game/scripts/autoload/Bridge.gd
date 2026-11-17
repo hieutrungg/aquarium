@@ -29,15 +29,24 @@ func _ready() -> void:
 		_window.addEventListener("message", _listener)
 	# Main and all scene consumers must be connected before publishing anything.
 	await get_tree().process_frame
-	if OS.has_feature("web"):
+	if OS.has_feature("web") and _is_embedded():
 		send("ready", {"version": 1})
 	else:
-		var json := FileAccess.get_file_as_string("res://data/dev/sample_scene_nature.json")
-		var dto: Variant = JSON.parse_string(json)
-		if dto is Dictionary:
-			_receive("scene:load", dto)
-		else:
-			push_error("Cannot read sample_scene_nature.json")
+		# Desktop editor runs, or the web build opened directly (not inside the React iframe): show the demo scene.
+		_load_dev_scene()
+
+
+func _is_embedded() -> bool:
+	return bool(JavaScriptBridge.eval("window.parent !== window", true))
+
+
+func _load_dev_scene() -> void:
+	var json := FileAccess.get_file_as_string("res://data/dev/sample_scene_nature.json")
+	var dto: Variant = JSON.parse_string(json)
+	if dto is Dictionary:
+		_receive("scene:load", dto)
+	else:
+		push_error("Cannot read sample_scene_nature.json")
 
 
 func send(type: String, payload: Variant = {}) -> void:

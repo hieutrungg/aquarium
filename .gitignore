@@ -18,8 +18,6 @@ game/build/
 art/raw/
 tools/**/out/
 
-# Godot web export (build lại được)
-frontend/public/aquarium/
 
 # local Claude settings
 .claude/settings.local.json
