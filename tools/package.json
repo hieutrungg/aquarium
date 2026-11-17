@@ -1,0 +1,13 @@
+{
+  "name": "aquaverse-sprite-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=25" },
+  "scripts": {
+    "normalize": "node sprite-normalize/index.mjs",
+    "qa": "node sprite-qa/index.mjs",
+    "test": "node test/run.mjs"
+  },
+  "dependencies": { "pngjs": "^7.0.0" }
+}

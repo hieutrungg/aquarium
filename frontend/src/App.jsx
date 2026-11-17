@@ -12,6 +12,7 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import MyTanks from './pages/MyTanks.jsx';
 import TankDetail from './pages/TankDetail.jsx';
+import AquariumView from './pages/AquariumView.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 export default function App() {
@@ -42,6 +43,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TankDetail />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tanks/:id/aquarium"
+          element={
+            <ProtectedRoute>
+              <AquariumView />
             </ProtectedRoute>
           }
         />

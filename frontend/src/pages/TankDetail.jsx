@@ -155,9 +155,12 @@ export default function TankDetail() {
             {new Date(tank.setupDate).toLocaleDateString('vi-VN')}
           </p>
         </div>
-        <button className="btn-ghost" onClick={editing ? () => setEditing(false) : startEdit}>
-          {editing ? 'Hủy' : '✎ Sửa hồ'}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <Link className="btn-ghost" to={`/tanks/${id}/aquarium`}>🐠 Xem bể 2D</Link>
+          <button className="btn-ghost" onClick={editing ? () => setEditing(false) : startEdit}>
+            {editing ? 'Hủy' : '✎ Sửa hồ'}
+          </button>
+        </div>
       </div>
 
       {editing && edit && (

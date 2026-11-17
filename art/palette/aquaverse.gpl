@@ -1,0 +1,56 @@
+GIMP Palette
+Name: AquaVerse v0
+Columns: 8
+#
+# --- core UI (6 màu bắt buộc) ---
+234 246 242	game_bg #EAF6F2
+184 225 213	water #B8E1D5
+118 181 165	wall #76B5A5
+249 245 233	cream #F9F5E9
+ 53  87  79	ink #35574F
+242 183 126	accent #F2B77E
+# --- water ramp ---
+ 94 158 142	water_0 #5E9E8E
+143 201 186	water_2 #8FC9BA
+214 240 232	water_4 #D6F0E8
+# --- moss / leaf ramp ---
+ 63 107  74	moss_0 #3F6B4A
+ 94 140  97	moss_1 #5E8C61
+127 168 106	moss_2 #7FA86A
+168 198 134	moss_3 #A8C686
+207 227 168	moss_4 #CFE3A8
+# --- sand ---
+156 132  99	sand_0 #9C8463
+205 185 143	sand_1 #CDB98F
+232 217 181	sand_2 #E8D9B5
+244 236 214	sand_3 #F4ECD6
+# --- rock ---
+ 79  91  85	rock_0 #4F5B55
+110 125 116	rock_1 #6E7D74
+154 165 155	rock_2 #9AA59B
+195 203 193	rock_3 #C3CBC1
+# --- wood ---
+ 74  58  46	wood_0 #4A3A2E
+107  82  65	wood_1 #6B5241
+139 107  78	wood_2 #8B6B4E
+176 142 110	wood_3 #B08E6E
+# --- warm UI extras ---
+255 253 246	paper #FFFDF6
+227 154  92	accent_dark #E39A5C
+# --- fish accents ---
+ 43  52  51	soft_black #2B3433
+ 70  80  78	charcoal #46504E
+255 255 255	white #FFFFFF
+ 35 110 170	neon_blue_0 #236EAA
+ 63 184 232	neon_blue_1 #3FB8E8
+127 224 255	neon_blue_2 #7FE0FF
+160  48  56	red_0 #A03038
+217  83  79	red_1 #D9534F
+240 124 108	red_2 #F07C6C
+242 154  74	orange #F29A4A
+245 208 107	yellow #F5D06B
+155 127 209	purple #9B7FD1
+106  84 160	purple_dark #6A54A0
+242 167 195	pink #F2A7C3
+236 214 205	pale_flesh #ECD6CD
+201 164 106	tea #C9A46A

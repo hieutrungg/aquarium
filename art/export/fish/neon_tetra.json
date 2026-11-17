@@ -1,0 +1,25 @@
+{
+  "cell": 16,
+  "offset": {
+    "x": 0,
+    "y": 2
+  },
+  "logicalSize": {
+    "width": 64,
+    "height": 65
+  },
+  "bbox": {
+    "x": 6,
+    "y": 22,
+    "width": 51,
+    "height": 20
+  },
+  "colors": 16,
+  "warnings": [
+    "Merged 18 palette colors down to 16."
+  ],
+  "pivot": {
+    "x": 31.5,
+    "y": 32
+  }
+}

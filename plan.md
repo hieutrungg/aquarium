@@ -66,10 +66,10 @@ agy -p "$(cat docs/tasks/A-001.md)" --mode accept-edits --model gemini-3.8-flash
 
 **Godot (kiểm tra & export):**
 ```bash
-"D:/GoDot/Godot_v4.7-stable_win64.exe" --headless --path game --import --quit
+"D:/GoDot/Godot_v4.7-stable_win64.exe/Godot_v4.7-stable_win64_console.exe" --headless --path game --import --quit
 ```
 ```bash
-"D:/GoDot/Godot_v4.7-stable_win64.exe" --headless --path game --export-release "Web" ../frontend/public/aquarium/index.html
+"D:/GoDot/Godot_v4.7-stable_win64.exe/Godot_v4.7-stable_win64_console.exe" --headless --path game --export-release "Web" ../frontend/public/aquarium/index.html
 ```
 
 ### 2.3 Mẫu brief task (Codex)
@@ -304,6 +304,14 @@ art/prompts/<batch>.md ──agy──► art/raw/<key>.png (≈1024px)
         └─► Aseprite -b --sheet → art/export/<group>/*.png + .json
         └─► tools/sync-assets: copy vào game/assets/ (Godot import filter = Nearest, mipmaps off)
 ```
+
+**Bài học từ pilot Neon (Phase 0):**
+- `agy -p` sinh ảnh qua subagent và **thoát trước khi ảnh xong**; ảnh được lưu dạng **JPG** trong `C:\Users\hieutr\.gemini\antigravity-cli\brain\<conversation>\`. Quy trình: chạy lệnh sinh → `agy -c -p "chỉ trả lời đường dẫn ảnh"` → chép về `art/raw/` → `aseprite -b in.jpg --save-as in.png`.
+- Headless agy tự từ chối quyền chạy lệnh (copy file); không dùng `--dangerously-skip-permissions`.
+- Chế độ dò lưới `auto` dò sai trên ảnh JPG (ra ô ~10px) → **luôn truyền `--cell 16`** khớp với prompt.
+- AI không giữ `BODY_PX` (Neon ra 51px thay vì 38px) → cần thêm bước co theo bảng 5.3 (task sau).
+- Báo cáo QA/contact sheet ghi vào `tools/out/`, **không** ghi vào `art/export/`.
+- File thực thi Godot: `D:\GoDot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe` (đường dẫn gốc là một thư mục). Máy mới có export templates **Windows**, thiếu **Web** (`web_nothreads_*.zip`).
 
 - Một loài tối đa **3 lần sinh lại**; sau đó Claude chỉ ra lỗi cụ thể để chỉnh tay trong Aseprite (file `.aseprite` được giữ lại).
 - `art/raw/` không commit (gitignore); `art/source/` và `art/export/` có commit.

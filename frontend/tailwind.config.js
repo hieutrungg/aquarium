@@ -4,6 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        cozy: {
+          bg: '#EAF6F2',
+          water: '#B8E1D5',
+          wall: '#76B5A5',
+          cream: '#F9F5E9',
+          ink: '#35574F',
+          accent: '#F2B77E',
+        },
         // Nền gaming tối
         base: '#070b16',
         panel: '#0d1426',

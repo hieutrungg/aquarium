@@ -1,0 +1,62 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/tank/TankView.gd" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="StatusStyle"]
+bg_color = Color(0.976471, 0.960784, 0.913725, 1)
+content_margin_left = 8.0
+content_margin_right = 8.0
+
+[sub_resource type="StyleBoxFlat" id="FeedStyle"]
+bg_color = Color(0.94902, 0.717647, 0.494118, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+
+[sub_resource type="StyleBoxFlat" id="FeedHover"]
+bg_color = Color(0.976471, 0.960784, 0.913725, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+position_smoothing_enabled = false
+
+[node name="TankView" type="Node2D" parent="."]
+script = ExtResource("2")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Status" type="Label" parent="HUD"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 532.0
+offset_bottom = 34.0
+theme_override_colors/font_color = Color(0.207843, 0.341176, 0.309804, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StatusStyle")
+text = "Đang chờ dữ liệu bể…"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="Feed" type="Button" parent="HUD"]
+offset_left = 542.0
+offset_top = 8.0
+offset_right = 628.0
+offset_bottom = 34.0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.207843, 0.341176, 0.309804, 1)
+theme_override_colors/font_hover_color = Color(0.207843, 0.341176, 0.309804, 1)
+theme_override_colors/font_pressed_color = Color(0.207843, 0.341176, 0.309804, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("FeedStyle")
+theme_override_styles/hover = SubResource("FeedHover")
+theme_override_styles/pressed = SubResource("FeedHover")
+text = "Cho ăn"
