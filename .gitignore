@@ -21,3 +21,6 @@ tools/**/out/
 
 # local Claude settings
 .claude/settings.local.json
+
+# local MongoDB data for dev/e2e
+backend/.mongo-data/

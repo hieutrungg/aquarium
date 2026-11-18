@@ -20,6 +20,7 @@ var fish_count := 0
 var style: Dictionary = {}
 var layout: Array[Dictionary] = []
 var _layers: Dictionary = {}
+var prop_sprites: Array[Sprite2D] = []
 
 
 func _ready() -> void:
@@ -53,6 +54,7 @@ func _on_scene_loaded(dto: Dictionary) -> void:
 		remove_child(child)
 		child.queue_free()
 	_layers.clear()
+	prop_sprites.clear()
 	fish_count = 0
 	# SceneState is also an engine resource class, so resolve our autoload by path.
 	var size: Vector2 = get_node("/root/SceneState").scene_size()
@@ -89,6 +91,7 @@ func _on_scene_loaded(dto: Dictionary) -> void:
 		var quantity := clampi(int(item.get("quantity", 0)), 0, MAX_FISH - fish_count)
 		for index in range(quantity):
 			var fish := Fish.instantiate()
+			fish.dto = item.duplicate(true)
 			fish.setup(str(item.get("speciesKey", "unknown")), item.get("render", {}), water_rect, get_substrate_y, fish_count, seed_value + fish_count * 7919)
 			_layers["FishBack" if rng.randf() < 0.35 else "FishFront"].add_child(fish)
 			fish_count += 1
@@ -104,19 +107,58 @@ func _spawn_prop(prop: Dictionary) -> void:
 	var sprite := Sprite2D.new()
 	sprite.name = str(prop.key)
 	sprite.texture = asset.texture
+	sprite.set_meta("hit_image", sprite.texture.get_image())
 	sprite.centered = false
 	sprite.offset = -asset.pivot
 	sprite.position = prop.position
 	# Mirror around the metadata pivot, keeping the same foot.
 	sprite.scale.x = -1 if prop.flip else 1
-	if prop.kind == "plants":
-		var sway := ShaderMaterial.new()
-		sway.shader = SWAY
-		sway.set_shader_parameter("strength", clampf(float(style.sway), 0, 2))
-		sway.set_shader_parameter("current", float(style.current))
-		sway.set_shader_parameter("phase", float(prop.phase))
-		sprite.material = sway
+	var sway := ShaderMaterial.new()
+	sway.shader = SWAY
+	sway.set_shader_parameter("strength", clampf(float(style.sway), 0, 2) if prop.kind == "plants" else 0.0)
+	sway.set_shader_parameter("current", float(style.current))
+	sway.set_shader_parameter("phase", float(prop.phase))
+	sprite.material = sway
 	_layers[prop.layer].add_child(sprite)
+	prop_sprites.append(sprite)
+
+
+func refresh_props() -> void:
+	for sprite in prop_sprites:
+		sprite.get_parent().remove_child(sprite)
+		sprite.queue_free()
+	prop_sprites.clear()
+	for prop in layout:
+		_spawn_prop(prop)
+
+
+func update_prop(index: int) -> void:
+	var prop := layout[index]
+	var sprite := prop_sprites[index]
+	sprite.position = prop.position
+	sprite.scale.x = -1 if prop.flip else 1
+	if sprite.get_parent() != _layers[prop.layer]:
+		sprite.reparent(_layers[prop.layer])
+		sprite.position = prop.position
+
+
+func pick_prop(point: Vector2) -> int:
+	# Pick in painter order, with alpha testing so transparent corners pass through.
+	for layer_index in range(LAYERS.size() - 1, -1, -1):
+		for index in range(prop_sprites.size() - 1, -1, -1):
+			var sprite := prop_sprites[index]
+			if sprite.get_parent().name != LAYERS[layer_index]:
+				continue
+			var pixel := Vector2i((sprite.to_local(point) - sprite.offset).floor())
+			var image: Image = sprite.get_meta("hit_image")
+			if pixel.x >= 0 and pixel.y >= 0 and pixel.x < image.get_width() and pixel.y < image.get_height() and image.get_pixelv(pixel).a > 0.5:
+				return index
+	return -1
+
+
+func highlight_prop(index: int) -> void:
+	for i in range(prop_sprites.size()):
+		prop_sprites[i].material.set_shader_parameter("highlighted", i == index)
 
 
 func _effect(parent: Node2D, effect_name: String, points: PackedVector2Array, shader: Shader) -> Polygon2D:

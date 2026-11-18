@@ -15,6 +15,7 @@ const hardscapeSchema = new mongoose.Schema(
       required: true,
     },
     name: { type: String, required: true },
+    spriteKey: String,
     quantity: { type: Number, default: 1, min: 1 },
     note: { type: String, default: '' },
   },

@@ -25,17 +25,17 @@ static func asset(kind: String, key: String) -> Dictionary:
 		var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(path + ".json"))
 		if meta is Dictionary and meta.get("pivot") is Dictionary:
 			pivot = Vector2(float(meta.pivot.get("x", pivot.x)), float(meta.pivot.get("y", pivot.y)))
-	# A two-pixel gutter prevents swaying tips being cropped.
-	if kind == "plants":
+	# Gutters accommodate sway and the editor's one-pixel silhouette outline.
+	if kind in ["plants", "hardscape"]:
 		var original := texture.get_image()
 		if original.is_compressed():
 			original.decompress()
 		if original.get_format() != Image.FORMAT_RGBA8:
 			original.convert(Image.FORMAT_RGBA8)
-		var padded := Image.create(original.get_width() + 4, original.get_height(), false, Image.FORMAT_RGBA8)
-		padded.blit_rect(original, Rect2i(Vector2i.ZERO, original.get_size()), Vector2i(2, 0))
+		var padded := Image.create(original.get_width() + 4, original.get_height() + 4, false, Image.FORMAT_RGBA8)
+		padded.blit_rect(original, Rect2i(Vector2i.ZERO, original.get_size()), Vector2i(2, 2))
 		texture = ImageTexture.create_from_image(padded)
-		pivot.x += 2
+		pivot += Vector2(2, 2)
 	var result := {"texture": texture, "pivot": pivot.round()}
 	_cache[cache_key] = result
 	return result

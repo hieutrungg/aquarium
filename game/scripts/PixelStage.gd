@@ -17,6 +17,9 @@ func _ready() -> void:
 
 func _fit() -> void:
 	var available := get_window().size
-	var factor := maxi(1, floori(minf(float(available.x) / BASE.x, float(available.y) / BASE.y)))
+	var fit := minf(float(available.x) / BASE.x, float(available.y) / BASE.y)
+	# Integer scale keeps pixels crisp once 2x fits; below that, a 1x frame would fill only
+	# about half of a HiDPI iframe, so fill the space with a fractional scale instead.
+	var factor := float(floori(fit)) if fit >= 2.0 else maxf(fit, 0.5)
 	frame.scale = Vector2.ONE * factor
-	frame.position = ((Vector2(available) - Vector2(BASE * factor)) / 2).floor()
+	frame.position = ((Vector2(available) - Vector2(BASE) * factor) / 2).floor()

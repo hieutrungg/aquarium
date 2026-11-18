@@ -11,6 +11,7 @@ var boids := Hash.new()
 var frame := 0
 var last_step_usec := 0
 var demo := false
+var interactions_enabled := true
 var rng := RandomNumberGenerator.new()
 
 func setup(view: Node2D) -> void:
@@ -34,7 +35,7 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(tank) or fishes.is_empty():
 		return
 	frame += 1
-	if demo:
+	if demo and interactions_enabled:
 		if frame == 60:
 			feed(tank.get_water_rect().position + tank.get_water_rect().size * Vector2(0.52, 0.22))
 		elif frame == 180:
@@ -84,6 +85,8 @@ func step(delta: float) -> void:
 	last_step_usec = Time.get_ticks_usec() - started
 
 func feed(at: Vector2) -> void:
+	if not interactions_enabled:
+		return
 	if not tank.get_water_rect().has_point(at):
 		return
 	for index in range(rng.randi_range(6, 10)):
@@ -95,6 +98,8 @@ func feed(at: Vector2) -> void:
 	get_node("/root/Bridge").send("action:feed", {"at": int(Time.get_unix_time_from_system())})
 
 func tap(at: Vector2) -> void:
+	if not interactions_enabled:
+		return
 	var ripple := Ripple.new()
 	ripple.position = at.round()
 	ripple.water = tank.get_water_rect()

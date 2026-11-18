@@ -11,33 +11,33 @@
     "lightSchedule": { "on": "08:00", "off": "18:00" }
   },
   "livestock": [
-    { "speciesKey": "neon_tetra", "name": "Neon xanh", "quantity": 12, "variant": null,
+    { "id": "lv-neon", "speciesKey": "neon_tetra", "name": "Neon xanh", "quantity": 12, "variant": null,
       "render": { "canvas": 64, "bodyPx": 38, "swimZone": ["mid"], "behavior": "school", "speed": 1 } },
-    { "speciesKey": "betta", "name": "Betta", "quantity": 1, "variant": null,
+    { "id": "lv-betta", "speciesKey": "betta", "name": "Betta", "quantity": 1, "variant": null,
       "render": { "canvas": 64, "bodyPx": 50, "swimZone": ["top", "mid"], "behavior": "wander", "speed": 0.6 } },
-    { "speciesKey": "angelfish", "name": "Thần tiên", "quantity": 2, "variant": null,
+    { "id": "lv-angel", "speciesKey": "angelfish", "name": "Thần tiên", "quantity": 2, "variant": null,
       "render": { "canvas": 64, "bodyPx": 34, "swimZone": ["mid"], "behavior": "hover", "speed": 0.7 } },
-    { "speciesKey": "guppy", "name": "Bảy màu", "quantity": 8, "variant": null,
+    { "id": "lv-guppy", "speciesKey": "guppy", "name": "Bảy màu", "quantity": 8, "variant": null,
       "render": { "canvas": 64, "bodyPx": 36, "swimZone": ["top", "mid"], "behavior": "wander", "speed": 1.1 } },
-    { "speciesKey": "panda_cory", "name": "Chuột Panda", "quantity": 6, "variant": null,
+    { "id": "lv-cory", "speciesKey": "panda_cory", "name": "Chuột Panda", "quantity": 6, "variant": null,
       "render": { "canvas": 64, "bodyPx": 34, "swimZone": ["bottom"], "behavior": "forage", "speed": 0.8 } }
   ],
   "plants": [
-    { "plantKey": "vallisneria", "position": "background", "quantity": 3 },
-    { "plantKey": "rotala", "position": "background", "quantity": 2 },
-    { "plantKey": "java_fern", "position": "midground", "quantity": 2 },
-    { "plantKey": "anubias", "position": "midground", "quantity": 2 },
-    { "plantKey": "moss", "position": "midground", "quantity": 2 },
-    { "plantKey": "carpet_grass", "position": "foreground", "quantity": 6 }
+    { "id": "pl-vallisneria", "plantKey": "vallisneria", "position": "background", "quantity": 3 },
+    { "id": "pl-rotala", "plantKey": "rotala", "position": "background", "quantity": 2 },
+    { "id": "pl-java_fern", "plantKey": "java_fern", "position": "midground", "quantity": 2 },
+    { "id": "pl-anubias", "plantKey": "anubias", "position": "midground", "quantity": 2 },
+    { "id": "pl-moss", "plantKey": "moss", "position": "midground", "quantity": 2 },
+    { "id": "pl-carpet_grass", "plantKey": "carpet_grass", "position": "foreground", "quantity": 6 }
   ],
   "hardscape": [
-    { "type": "rock", "spriteKey": "seiryu_l", "quantity": 1 },
-    { "type": "rock", "spriteKey": "seiryu_m", "quantity": 1 },
-    { "type": "rock", "spriteKey": "seiryu_s", "quantity": 2 },
-    { "type": "driftwood", "spriteKey": "driftwood_branch", "quantity": 1 }
+    { "id": "hs-seiryu_l", "type": "rock", "spriteKey": "seiryu_l", "quantity": 1 },
+    { "id": "hs-seiryu_m", "type": "rock", "spriteKey": "seiryu_m", "quantity": 1 },
+    { "id": "hs-seiryu_s", "type": "rock", "spriteKey": "seiryu_s", "quantity": 2 },
+    { "id": "hs-wood", "type": "driftwood", "spriteKey": "driftwood_branch", "quantity": 1 }
   ],
   "water": { "temp": 25.5, "ph": 6.8, "nitrate": 15, "measuredAt": "2026-11-15T08:00:00Z" },
   "care": { "overdue": ["water_change"], "daysSinceWaterChange": 9, "lastFed": "2026-11-17T07:30:00Z" },
-  "scene": { "props": [], "camera": { "x": 0 } },
+  "scene": { "props": [{ "refType": "hardscape", "refId": "hs-seiryu_l", "key": "seiryu_l", "x": 420, "layer": "mid", "flip": false }], "camera": { "x": 0 } },
   "warnings": []
 }

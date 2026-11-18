@@ -2,6 +2,8 @@ import express from 'express';
 import {
   getTanks,
   getTank,
+  getTankScene,
+  saveTankScene,
   createTank,
   updateTank,
   deleteTank,
@@ -26,6 +28,7 @@ router.use(protect);
 
 router.route('/').get(getTanks).post(createTank);
 router.route('/:id').get(getTank).put(updateTank).delete(deleteTank);
+router.route('/:id/scene').get(getTankScene).put(saveTankScene);
 
 // Cư dân
 router.post('/:id/livestock', addLivestock);

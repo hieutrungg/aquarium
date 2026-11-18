@@ -5,6 +5,8 @@ const plantSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     sciName: { type: String, trim: true },
     slug: { type: String, unique: true, index: true },
+    plantKey: { type: String, match: /^[a-z0-9_]+$/ },
+    render: { spriteKey: String, heightPx: Number },
     image: { type: String, default: '' },
     description: { type: String, default: '' },
     light: {

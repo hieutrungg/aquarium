@@ -39,7 +39,7 @@ const STYLES = {
   },
 };
 
-export function suggestLayout(tank, lib, contents = {}) {
+export function suggestLayout(tank, lib = {}, contents = {}) {
   const volume = tank.volume || 0;
   const { length = 0, height = 0 } = tank.dimensions || {};
   const ratio = height ? length / height : 2; // hồ càng dài/thấp càng hợp Iwagumi
@@ -84,6 +84,8 @@ export function suggestLayout(tank, lib, contents = {}) {
     yourContents.plants.length + yourContents.hardscape.length + yourContents.livestock.length > 0;
 
   return {
+    // Preserve legacy labels (including Jungle/Reef), expose a supported scene key.
+    styleKey: tank.style || (tank.shape === 'jar' ? 'balcony_jar' : ({ jungle: 'lowtech', reef: 'nature' }[key] || key)),
     style: style.name,
     accent: style.accent,
     description: style.description,

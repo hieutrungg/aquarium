@@ -34,6 +34,20 @@ const tankSchema = new mongoose.Schema(
       default: 'planted',
     },
     setupDate: { type: Date, default: Date.now },
+    style: {
+      type: String,
+      enum: ['nature', 'iwagumi', 'dutch', 'biotope_amazon', 'biotope_asia', 'stream', 'paludarium', 'balcony_jar', 'foam_box', 'lowtech'],
+      default: null,
+    },
+    shape: { type: String, enum: ['rect', 'jar'], default: 'rect' },
+    scene: {
+      props: { type: [mongoose.Schema.Types.Mixed], default: [] },
+      camera: { x: { type: Number, default: 0 } },
+    },
+    lightSchedule: {
+      on: { type: String, default: '08:00' },
+      off: { type: String, default: '18:00' },
+    },
     equipment: [equipmentSchema],
     coverImage: { type: String, default: '' },
     note: { type: String, default: '' },

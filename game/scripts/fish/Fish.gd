@@ -6,6 +6,7 @@ const Placeholder := preload("res://scripts/fish/PlaceholderFish.gd")
 static var images: Dictionary = {}
 var brain := Brain.new()
 var species_key := ""
+var dto: Dictionary = {}
 var profile: Dictionary
 var sprite: Sprite2D
 var swim: ShaderMaterial

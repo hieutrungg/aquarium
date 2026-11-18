@@ -44,11 +44,13 @@ func _run() -> void:
 	for count: int in counts.values():
 		assert(count > 0, "default depth groups")
 	var authored := dto.duplicate(true)
-	authored.scene.props = [{"refType": "plant", "plantKey": "anubias", "x": 225, "y": 280, "layer": "midground", "flip": true},
-		{"refType": "hardscape", "spriteKey": "seiryu_s", "x": 350, "layer": "background"}]
+	authored.scene.props = [{"refType": "plant", "refId": "pl-anubias", "key": "anubias", "x": 225, "y": 280, "layer": "mid", "flip": true},
+		{"refType": "hardscape", "refId": "hs-seiryu_s", "key": "seiryu_s", "x": 350, "layer": "back"}]
 	var fixed := Solver.solve(authored, style, view.water_rect, view.get_substrate_y)
-	assert(fixed.size() == 2 and fixed[0].position == Vector2(225, 280) and fixed[0].flip, "authored world-space feet")
-	assert(fixed[1].position == Vector2(350, view.get_substrate_y(350) + 2), "missing y grounds authored prop")
+	var fern: Dictionary = fixed.filter(func(p: Dictionary) -> bool: return p.refId == "pl-anubias")[0]
+	var stone: Dictionary = fixed.filter(func(p: Dictionary) -> bool: return p.refId == "hs-seiryu_s")[0]
+	assert(fixed.size() == view.layout.size() and fern.position == Vector2(225, 280) and fern.flip, "authored world-space feet merged with new units")
+	assert(stone.position == Vector2(350, view.get_substrate_y(350) + 2), "missing y grounds authored prop")
 	for key: String in Textures.SIZES:
 		var kind := "plants" if key in ["carpet_grass", "anubias", "java_fern", "rotala", "vallisneria", "moss"] else "hardscape"
 		var image := Textures._fallback(kind, key)

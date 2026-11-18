@@ -9,6 +9,7 @@ import Plant from '../models/Plant.js';
 import Species from '../models/Species.js';
 import { suggestLayout, buildImagePrompt } from '../utils/layout.js';
 import { generateImage, isGeminiConfigured } from '../utils/gemini.js';
+import { buildTankScene, validateSceneInput } from '../utils/tankScene.js';
 
 // Đảm bảo hồ thuộc về user đang đăng nhập
 const ownTankOr404 = async (tankId, userId, res) => {
@@ -19,6 +20,34 @@ const ownTankOr404 = async (tankId, userId, res) => {
   }
   return tank;
 };
+
+const loadTankScene = async (tank) => {
+  const [livestock, plants, hardscape, waterLogs, careTasks] = await Promise.all([
+    Livestock.find({ tankId: tank._id }).populate('speciesId').lean(),
+    TankPlant.find({ tankId: tank._id }).populate('plantId').lean(),
+    Hardscape.find({ tankId: tank._id }).lean(),
+    WaterLog.find({ tankId: tank._id }).sort('-date').limit(1).lean(),
+    CareTask.find({ tankId: tank._id }).lean(),
+  ]);
+  return buildTankScene({ tank, livestock, plants, hardscape, waterLogs, careTasks });
+};
+
+export const getTankScene = asyncHandler(async (req, res) => {
+  const tank = await ownTankOr404(req.params.id, req.user._id, res);
+  res.json(await loadTankScene(tank));
+});
+
+export const saveTankScene = asyncHandler(async (req, res) => {
+  const tank = await ownTankOr404(req.params.id, req.user._id, res);
+  try {
+    tank.scene = validateSceneInput(req.body);
+  } catch (err) {
+    res.status(400);
+    throw err;
+  }
+  await tank.save();
+  res.json(await loadTankScene(tank));
+});
 
 // @route GET /api/tanks
 export const getTanks = asyncHandler(async (req, res) => {

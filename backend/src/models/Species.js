@@ -10,6 +10,18 @@ const speciesSchema = new mongoose.Schema(
     commonName: { type: String, required: true, trim: true },
     sciName: { type: String, trim: true },
     slug: { type: String, unique: true, index: true },
+    speciesKey: { type: String, unique: true, sparse: true, match: /^[a-z0-9_]+$/ },
+    render: {
+      spriteKey: String,
+      canvas: Number,
+      bodyPx: Number,
+      swimZone: { type: [String], default: undefined },
+      behavior: String,
+      schoolMin: Number,
+      speed: Number,
+      nocturnal: Boolean,
+      clingsGlass: Boolean,
+    },
     category: {
       type: String,
       enum: ['fish', 'shrimp', 'snail', 'other'],

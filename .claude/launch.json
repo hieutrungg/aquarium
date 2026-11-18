@@ -2,16 +2,35 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "mongodb",
+      "runtimeExecutable": "C:/Program Files/MongoDB/Server/8.3/bin/mongod.exe",
+      "runtimeArgs": [
+        "--dbpath",
+        "backend/.mongo-data",
+        "--port",
+        "27017",
+        "--bind_ip",
+        "127.0.0.1"
+      ],
+      "port": 27017
+    },
+    {
       "name": "frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": "frontend",
       "port": 5173
     },
     {
       "name": "backend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": "backend",
       "port": 5000
     }

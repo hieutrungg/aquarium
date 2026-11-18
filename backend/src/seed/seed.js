@@ -6,6 +6,10 @@ import Plant from '../models/Plant.js';
 import Article from '../models/Article.js';
 import Disease from '../models/Disease.js';
 import User from '../models/User.js';
+import Tank from '../models/Tank.js';
+import Livestock from '../models/Livestock.js';
+import TankPlant from '../models/TankPlant.js';
+import Hardscape from '../models/Hardscape.js';
 import { slugify } from '../utils/token.js';
 
 dotenv.config();
@@ -110,6 +114,35 @@ const plants = [
   },
 ];
 
+// Phase 1: enrich existing entries rather than duplicating Betta/Neon or plants.
+Object.assign(species[0], { speciesKey: 'betta', render: { spriteKey: 'betta', canvas: 64, bodyPx: 50,
+  swimZone: ['top', 'mid'], behavior: 'wander', speed: 0.6 } });
+Object.assign(species[1], { speciesKey: 'neon_tetra', render: { spriteKey: 'neon_tetra', canvas: 64, bodyPx: 38,
+  swimZone: ['mid'], behavior: 'school', schoolMin: 6, speed: 1 } });
+species.push(
+  { speciesKey: 'angelfish', commonName: 'Thần tiên', sciName: 'Pterophyllum scalare', adultSize: 15,
+    minTankSize: 120, tempRange: { min: 24, max: 30 }, phRange: { min: 6, max: 7.5 },
+    render: { spriteKey: 'angelfish', canvas: 64, bodyPx: 34, swimZone: ['mid'], behavior: 'hover', speed: 0.7 } },
+  { speciesKey: 'guppy', commonName: 'Bảy màu', sciName: 'Poecilia reticulata', adultSize: 5,
+    minTankSize: 40, tempRange: { min: 22, max: 28 }, phRange: { min: 6.5, max: 8 },
+    render: { spriteKey: 'guppy', canvas: 64, bodyPx: 36, swimZone: ['top', 'mid'], behavior: 'wander', speed: 1.1 } },
+  { speciesKey: 'panda_cory', commonName: 'Chuột Panda', sciName: 'Corydoras panda', adultSize: 5,
+    minTankSize: 60, tempRange: { min: 20, max: 26 }, phRange: { min: 6, max: 7.5 },
+    render: { spriteKey: 'panda_cory', canvas: 64, bodyPx: 34, swimZone: ['bottom'], behavior: 'forage', schoolMin: 6, speed: 0.8 } },
+);
+Object.assign(plants[0], { plantKey: 'carpet_grass', render: { spriteKey: 'carpet_grass', heightPx: 24 } });
+Object.assign(plants[1], { plantKey: 'anubias', render: { spriteKey: 'anubias', heightPx: 48 } });
+plants.push(
+  { plantKey: 'java_fern', name: 'Dương xỉ Java', sciName: 'Microsorum pteropus', position: 'midground',
+    render: { spriteKey: 'java_fern', heightPx: 80 } },
+  { plantKey: 'rotala', name: 'Rotala', sciName: 'Rotala rotundifolia', position: 'background',
+    render: { spriteKey: 'rotala', heightPx: 120 } },
+  { plantKey: 'vallisneria', name: 'Cỏ hẹ', sciName: 'Vallisneria spiralis', position: 'background',
+    render: { spriteKey: 'vallisneria', heightPx: 160 } },
+  { plantKey: 'moss', name: 'Rêu Java', sciName: 'Taxiphyllum barbieri', position: 'midground',
+    render: { spriteKey: 'moss', heightPx: 32 } },
+);
+
 const articles = [
   {
     title: 'Hướng dẫn cân bằng vi sinh (cycle) cho hồ mới',
@@ -147,8 +180,6 @@ const run = async () => {
   await connectDB();
   console.log('🌱 Đang xóa dữ liệu cũ...');
   await Promise.all([
-    Species.deleteMany(),
-    Plant.deleteMany(),
     Article.deleteMany(),
     Disease.deleteMany(),
   ]);
@@ -156,8 +187,15 @@ const run = async () => {
   const withSlug = (arr, field) =>
     arr.map((x) => ({ ...x, slug: `${slugify(x[field])}-${Math.random().toString(36).slice(2, 7)}` }));
 
-  await Species.insertMany(withSlug(species, 'commonName'));
-  await Plant.insertMany(withSlug(plants, 'name'));
+  // Keep IDs stable so existing tanks retain their library references on reseed.
+  const savedSpecies = await Promise.all(species.map((item) => Species.findOneAndUpdate(
+    { sciName: item.sciName }, { $set: item, $setOnInsert: { slug: slugify(item.commonName) } },
+    { upsert: true, new: true, runValidators: true },
+  )));
+  const savedPlants = await Promise.all(plants.map((item) => Plant.findOneAndUpdate(
+    { sciName: item.sciName }, { $set: item, $setOnInsert: { slug: slugify(item.name) } },
+    { upsert: true, new: true, runValidators: true },
+  )));
   await Article.insertMany(withSlug(articles, 'title'));
   await Disease.insertMany(withSlug(diseases, 'name'));
 
@@ -172,6 +210,34 @@ const run = async () => {
     });
     console.log(`👤 Đã tạo admin: ${adminEmail} / admin123`);
   }
+
+  const admin = await User.findOne({ email: adminEmail });
+  const tank = await Tank.findOneAndUpdate(
+    { userId: admin._id, note: 'seed:sample_scene_nature' },
+    { $set: { name: 'Bể phòng khách', style: 'nature', shape: 'rect', type: 'planted',
+      dimensions: { length: 60, width: 30, height: 36 }, volume: 65,
+      equipment: ['filter', 'light', 'co2'].map((type) => ({ type, name: type })),
+      lightSchedule: { on: '08:00', off: '18:00' }, scene: { props: [], camera: { x: 0 } } } },
+    { upsert: true, new: true, runValidators: true },
+  );
+  await Promise.all([Livestock.deleteMany({ tankId: tank._id }), TankPlant.deleteMany({ tankId: tank._id }),
+    Hardscape.deleteMany({ tankId: tank._id })]);
+  await Livestock.insertMany(Object.entries({ neon_tetra: 12, betta: 1, angelfish: 2, guppy: 8, panda_cory: 6 })
+    .map(([key, quantity]) => {
+      const fish = savedSpecies.find((item) => item.speciesKey === key);
+      return { tankId: tank._id, speciesId: fish._id, name: fish.commonName, quantity };
+    }));
+  await TankPlant.insertMany(Object.entries({ vallisneria: 3, rotala: 2, java_fern: 2, anubias: 2, moss: 2, carpet_grass: 6 })
+    .map(([key, quantity]) => {
+      const plant = savedPlants.find((item) => item.plantKey === key);
+      return { tankId: tank._id, plantId: plant._id, name: plant.name, position: plant.position, quantity };
+    }));
+  await Hardscape.insertMany([
+    { type: 'rock', spriteKey: 'seiryu_l', name: 'Đá Seiryu lớn', quantity: 1 },
+    { type: 'rock', spriteKey: 'seiryu_m', name: 'Đá Seiryu vừa', quantity: 1 },
+    { type: 'rock', spriteKey: 'seiryu_s', name: 'Đá Seiryu nhỏ', quantity: 2 },
+    { type: 'driftwood', spriteKey: 'driftwood_branch', name: 'Lũa nhánh', quantity: 1 },
+  ].map((item) => ({ ...item, tankId: tank._id })));
 
   console.log('✅ Seed dữ liệu hoàn tất!');
   await mongoose.disconnect();

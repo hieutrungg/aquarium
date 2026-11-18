@@ -2,6 +2,10 @@ extends Node
 
 signal scene_loaded(dto: Dictionary)
 signal message_received(type: String, payload: Variant)
+signal message_sent(type: String, payload: Variant)
+
+var current_dto: Dictionary = {}
+var applying_patch := false
 
 # Keep both JavaScript functions alive for the lifetime of the listener.
 var _callback: JavaScriptObject
@@ -52,6 +56,7 @@ func _load_dev_scene() -> void:
 
 
 func send(type: String, payload: Variant = {}) -> void:
+	message_sent.emit(type, payload)
 	if OS.has_feature("web") and _window != null:
 		var json = JavaScriptBridge.get_interface("JSON")
 		var message = json.parse(JSON.stringify({"type": type, "payload": payload}))
@@ -71,7 +76,25 @@ func _on_web_message(args: Array) -> void:
 func _receive(type: String, payload: Variant) -> void:
 	message_received.emit(type, payload)
 	if type == "scene:load" and payload is Dictionary:
-		scene_loaded.emit(payload)
+		current_dto = payload.duplicate(true)
+		scene_loaded.emit(current_dto)
+	elif type == "scene:patch" and payload is Dictionary:
+		current_dto = merge_patch(current_dto, payload)
+		applying_patch = true
+		scene_loaded.emit(current_dto)
+		applying_patch = false
+
+
+static func merge_patch(dto: Dictionary, patch: Dictionary) -> Dictionary:
+	var merged := dto.duplicate(true)
+	merged.merge(patch.duplicate(true), true)
+	return merged
+
+
+func remember_scene(scene: Dictionary) -> void:
+	# Keep desktop saves and later partial patches on the same layout.
+	current_dto["scene"] = scene.duplicate(true)
+	get_node("/root/SceneState").current_dto["scene"] = scene.duplicate(true)
 
 
 func _exit_tree() -> void:
