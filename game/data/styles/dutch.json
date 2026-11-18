@@ -1,0 +1,70 @@
+{
+  "key": "dutch",
+  "substrate": {
+    "tile": "soil_black",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#2B3433",
+    "grain": "#4A3A2E",
+    "rim": "#4F5B55"
+  },
+  "colors": {
+    "wall": "#76B5A5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#8B6B4E",
+    "wood_shadow": "#6B5241",
+    "ink": "#35574F"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": true,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 0.0,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+    ],
+    "plants": [
+      {
+        "quantity": 4,
+        "plantKey": "ludwigia_red"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "alternanthera"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "hygrophila"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "rotala"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "cryptocoryne"
+      },
+      {
+        "quantity": 5,
+        "plantKey": "dwarf_sag"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0,
+    "color": "#B8E1D5"
+  },
+  "parallax_layers": 3,
+  "layout_rule": "dutch_streets",
+  "light": {
+    "caustics": 1,
+    "god_rays": 1
+  },
+  "floating_allowed": false
+}

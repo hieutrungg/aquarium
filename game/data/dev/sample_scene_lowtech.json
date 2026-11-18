@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "tank": {
+    "id": "dev-lowtech",
+    "name": "Demo lowtech",
+    "style": "lowtech",
+    "shape": "rect",
+    "dimensions": {
+      "length": 60,
+      "width": 30,
+      "height": 36
+    },
+    "volume": 65,
+    "equipment": [
+      "filter",
+      "light"
+    ],
+    "lightSchedule": {
+      "on": "08:00",
+      "off": "18:00"
+    }
+  },
+  "livestock": [
+    {
+      "quantity": 5,
+      "speciesKey": "otocinclus",
+      "id": "lv-otto",
+      "name": "Otto",
+      "render": {
+        "swimZone": [
+          "bottom"
+        ],
+        "speed": 0.6,
+        "behavior": "forage"
+      }
+    },
+    {
+      "id": "lv-tiger",
+      "speciesKey": "tiger_barb",
+      "name": "Tứ vân",
+      "quantity": 6,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "mid"
+        ],
+        "behavior": "school",
+        "speed": 1.1
+      }
+    },
+    {
+      "id": "lv-skirt",
+      "speciesKey": "black_skirt",
+      "name": "Cánh buồm",
+      "quantity": 5,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "mid"
+        ],
+        "behavior": "school",
+        "speed": 0.9
+      }
+    },
+    {
+      "id": "lv-bee",
+      "speciesKey": "bumblebee_goby",
+      "name": "Bống vàng",
+      "quantity": 3,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "bottom"
+        ],
+        "behavior": "forage",
+        "speed": 0.6
+      }
+    }
+  ],
+  "plants": [
+    {
+      "quantity": 3,
+      "plantKey": "anubias",
+      "id": "pl-anubias"
+    },
+    {
+      "quantity": 3,
+      "plantKey": "java_fern",
+      "id": "pl-java_fern"
+    },
+    {
+      "quantity": 3,
+      "plantKey": "bucephalandra",
+      "id": "pl-bucephalandra"
+    },
+    {
+      "quantity": 4,
+      "plantKey": "moss",
+      "id": "pl-moss"
+    },
+    {
+      "quantity": 3,
+      "plantKey": "hornwort",
+      "id": "pl-hornwort"
+    },
+    {
+      "quantity": 4,
+      "plantKey": "frogbit",
+      "id": "pl-frogbit"
+    }
+  ],
+  "hardscape": [
+    {
+      "quantity": 1,
+      "type": "driftwood",
+      "spriteKey": "driftwood_branch",
+      "id": "hs-driftwood_branch"
+    },
+    {
+      "quantity": 2,
+      "type": "rock",
+      "spriteKey": "seiryu_m",
+      "id": "hs-seiryu_m"
+    }
+  ],
+  "water": {
+    "temp": 25.5,
+    "ph": 6.8,
+    "nitrate": 15,
+    "measuredAt": "2026-11-15T08:00:00Z"
+  },
+  "care": {
+    "overdue": [
+      "water_change"
+    ],
+    "daysSinceWaterChange": 9,
+    "lastFed": "2026-11-17T07:30:00Z"
+  },
+  "scene": {
+    "props": [],
+    "camera": {
+      "x": 0
+    }
+  },
+  "warnings": []
+}

@@ -9,6 +9,7 @@ import speciesRoutes from './routes/speciesRoutes.js';
 import plantRoutes from './routes/plantRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
 import diseaseRoutes from './routes/diseaseRoutes.js';
+import catalogRoutes from './routes/catalogRoutes.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/species', speciesRoutes);
 app.use('/api/plants', plantRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/diseases', diseaseRoutes);
+app.use('/api/catalog', catalogRoutes);
 
 // Error handling
 app.use(notFound);

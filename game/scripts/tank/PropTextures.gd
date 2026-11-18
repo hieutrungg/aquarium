@@ -5,7 +5,11 @@ const SIZES := {"seiryu_l": Vector2i(96, 64), "seiryu_m": Vector2i(64, 48),
 	"seiryu_s": Vector2i(32, 24), "driftwood_branch": Vector2i(128, 96),
 	"carpet_grass": Vector2i(64, 16), "anubias": Vector2i(48, 40),
 	"java_fern": Vector2i(48, 64), "rotala": Vector2i(32, 96),
-	"vallisneria": Vector2i(32, 112), "moss": Vector2i(32, 16)}
+	"vallisneria": Vector2i(32, 112), "moss": Vector2i(32, 16),
+	"ludwigia_red": Vector2i(32, 96), "alternanthera": Vector2i(40, 48),
+	"hygrophila": Vector2i(32, 104), "dwarf_sag": Vector2i(64, 20),
+	"cryptocoryne": Vector2i(40, 40), "bucephalandra": Vector2i(28, 20),
+	"hornwort": Vector2i(32, 112), "frogbit": Vector2i(48, 32)}
 static var _cache: Dictionary = {}
 
 
@@ -105,12 +109,20 @@ static func _plant(image: Image, key: String, rng: RandomNumberGenerator) -> voi
 	var w := float(image.get_width())
 	var h := float(image.get_height())
 	var greens: Array[Color] = [Color("3F6B4A"), Color("5E8C61"), Color("7FA86A"), Color("A8C686")]
-	if key in ["carpet_grass", "moss"]:
+	if key in ["ludwigia_red", "alternanthera"]:
+		greens = [Color("6B5241"), Color("D9534F"), Color("F07C6C"), Color("F2B77E")]
+	if key == "frogbit":
+		for i in range(7):
+			var root := Vector2(7 + i * 5, 6)
+			_line(image, root, root + Vector2(rng.randf_range(-3, 3), rng.randf_range(16, 25)), Color("9C8463"))
+		for i in range(5):
+			_leaf(image, Vector2(6 + i * 8, 8), Vector2(11 + i * 8, 2), 5, greens[1 + i % 3])
+	elif key in ["carpet_grass", "moss", "dwarf_sag"]:
 		for index in range(int(w * 1.7)):
 			var base := Vector2(rng.randf_range(2, w - 2), h)
 			var tip := base + Vector2(rng.randf_range(-4, 4), -rng.randf_range(3, h - 2))
 			_leaf(image, base, tip, 1.5 if key == "carpet_grass" else 2.5, greens[rng.randi_range(0, 3)])
-	elif key == "rotala":
+	elif key in ["rotala", "ludwigia_red", "hygrophila", "hornwort"]:
 		for stem in range(5):
 			var base := Vector2(8 + stem * 4, h)
 			var top := Vector2(base.x + rng.randf_range(-5, 5), rng.randf_range(3, 28))

@@ -40,7 +40,10 @@ func _run() -> void:
 	var counts := {"PlantsBack": 0, "PlantsMid": 0, "PlantsFront": 0, "HardscapeBack": 0, "HardscapeMid": 0}
 	for prop in generated:
 		counts[prop.layer] += 1
-		assert(prop.position.y == view.get_substrate_y(prop.position.x) + 2, "grounded feet")
+		if prop.has("attached_to"):
+			assert(prop.position.y < view.get_substrate_y(prop.position.x), "epiphyte feet above substrate")
+		else:
+			assert(prop.position.y == view.get_substrate_y(prop.position.x) + 2, "grounded feet")
 	for count: int in counts.values():
 		assert(count > 0, "default depth groups")
 	var authored := dto.duplicate(true)
@@ -52,7 +55,7 @@ func _run() -> void:
 	assert(fixed.size() == view.layout.size() and fern.position == Vector2(225, 280) and fern.flip, "authored world-space feet merged with new units")
 	assert(stone.position == Vector2(350, view.get_substrate_y(350) + 2), "missing y grounds authored prop")
 	for key: String in Textures.SIZES:
-		var kind := "plants" if key in ["carpet_grass", "anubias", "java_fern", "rotala", "vallisneria", "moss"] else "hardscape"
+		var kind := "plants" if preload("res://scripts/tank/PlantLibrary.gd").all().has(key) else "hardscape"
 		var image := Textures._fallback(kind, key)
 		assert(image.get_size() == Textures.SIZES[key], "native fallback size")
 		assert(not image.is_invisible(), "nonempty fallback")

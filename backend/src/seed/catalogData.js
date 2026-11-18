@@ -1,0 +1,72 @@
+// Body sizes are sprite pixels from plan 5.3; adultSize is real centimetres.
+// key, Vietnamese name, scientific name, bodyPx, zone, behavior, schoolMin, speed,
+// styles, adultSize, minimum litres, temperature, pH, difficulty, temperament, diet, description
+const rows = [
+  ['neon_tetra', 'Neon xanh', 'Paracheirodon innesi', 38, 'mid', 'school', 8, 1, 'nature iwagumi', 4, 40, [22,26], [6,7], 'easy', 'peaceful', 'omnivore', 'Cá đàn có sọc xanh sáng và nửa bụng đỏ. Nên nuôi đàn trong bể ổn định.'],
+  ['betta', 'Betta (Xiêm)', 'Betta splendens', 50, 'top mid', 'wander', 1, 0.6, 'balcony_jar foam_box lowtech', 7, 20, [24,28], [6.5,7.5], 'easy', 'aggressive', 'carnivore', 'Cá vây dài, bơi chậm và giữ lãnh thổ. Không nuôi chung hai cá đực.'],
+  ['angelfish', 'Thần tiên', 'Pterophyllum scalare', 34, 'mid', 'hover', 2, 0.7, 'dutch biotope_amazon', 15, 120, [24,30], [6,7.5], 'medium', 'semi-aggressive', 'omnivore', 'Cá thân cao, lượn chậm và thường ghép cặp. Cần bể cao và khoảng bơi rộng.'],
+  ['guppy', 'Bảy màu', 'Poecilia reticulata', 36, 'top mid', 'wander', 3, 1.1, 'balcony_jar foam_box paludarium', 5, 40, [22,28], [6.5,8], 'easy', 'peaceful', 'omnivore', 'Cá đẻ con nhiều màu, sống thành nhóm lỏng. Cá đực thường xòe đuôi khoe sắc.'],
+  ['panda_cory', 'Chuột Panda', 'Corydoras panda', 34, 'bottom', 'forage', 6, 0.8, 'biotope_amazon', 5, 60, [20,26], [6,7.5], 'medium', 'peaceful', 'omnivore', 'Cá đáy hiền, thích sục cát theo nhóm. Thỉnh thoảng cá lao lên mặt nước lấy khí.'],
+  ['cardinal_tetra', 'Neon vua', 'Paracheirodon axelrodi', 40, 'mid', 'school', 8, 1, 'nature iwagumi', 5, 60, [24,28], [5,7], 'medium', 'peaceful', 'omnivore', 'Cá đàn có dải đỏ chạy suốt bụng. Ưa nước mềm và môi trường ổn định.'],
+  ['rummynose', 'Sóc đầu đỏ', 'Hemigrammus rhodostomus', 40, 'mid', 'school', 10, 1.2, 'nature iwagumi paludarium', 5, 80, [24,28], [5.5,7], 'medium', 'peaceful', 'omnivore', 'Cá đầu đỏ, đuôi sọc đen trắng, bơi đàn rất đồng bộ. Cần không gian bơi dài và nước sạch.'],
+  ['harlequin', 'Tam giác', 'Trigonostigma heteromorpha', 38, 'mid', 'school', 6, 1, 'nature iwagumi biotope_asia', 5, 60, [22,28], [6,7.5], 'easy', 'peaceful', 'omnivore', 'Cá nhỏ có mảng tam giác đen ở thân sau. Nuôi theo đàn giúp cá tự tin hơn.'],
+  ['serpae', 'Hồng nhung', 'Hyphessobrycon eques', 38, 'mid', 'school', 8, 1.1, 'nature', 5, 60, [22,28], [5.5,7.5], 'easy', 'semi-aggressive', 'omnivore', 'Cá đỏ hoạt bát, đôi khi rỉa vây bạn bể. Nên giữ đàn đủ lớn và tránh cá vây dài.'],
+  ['penguin_tetra', 'Chim cánh cụt', 'Thayeria boehlkei', 40, 'mid', 'school', 6, 1, 'nature', 6, 80, [22,28], [6,7.5], 'easy', 'peaceful', 'omnivore', 'Cá có sọc đen kéo xuống thùy đuôi dưới. Khi bơi đàn thường giữ đầu hướng lên khoảng 15 độ.'],
+  ['rainbowfish', 'Cầu vồng', 'Melanotaenia boesemani', 54, 'mid', 'school', 6, 1.5, 'dutch', 12, 150, [24,28], [7,8], 'medium', 'peaceful', 'omnivore', 'Cá cầu vồng thân hai màu, bơi nhanh theo đàn lỏng. Cần bể dài và nhiều khoảng trống.'],
+  ['dwarf_gourami', 'Sặc gấm', 'Trichogaster lalius', 44, 'top mid', 'hover', 1, 0.6, 'dutch biotope_asia', 8, 60, [24,28], [6,7.5], 'medium', 'semi-aggressive', 'omnivore', 'Cá bơi chậm với đôi râu bụng dò đường. Ưa bể nhiều cây và mặt nước yên.'],
+  ['ram', 'Phượng hoàng', 'Mikrogeophagus ramirezi', 40, 'bottom mid', 'hover', 2, 0.7, 'dutch biotope_amazon', 7, 60, [26,30], [5.5,7], 'hard', 'semi-aggressive', 'omnivore', 'Cá nhỏ thường ghép cặp và giữ lãnh thổ gần đáy. Nhạy với nước bẩn và dao động nhiệt.'],
+  ['discus', 'Đĩa', 'Symphysodon sp.', 68, 'mid', 'school', 6, 0.5, 'dutch biotope_amazon', 20, 250, [28,30], [5.5,7], 'hard', 'peaceful', 'omnivore', 'Cá thân tròn, bơi chậm theo nhóm nhỏ. Cần nước ấm sạch và chế độ chăm sóc đều.'],
+  ['pencilfish', 'Bút chì', 'Nannostomus beckfordi', 36, 'top mid', 'school', 6, 0.7, 'biotope_amazon', 6, 60, [24,28], [5.5,7], 'medium', 'peaceful', 'omnivore', 'Cá thân thon thường lơ lửng theo đàn lỏng. Ưa ánh sáng dịu và nhiều chỗ trú.'],
+  ['altum_angel', 'Thần tiên Ai Cập', 'Pterophyllum altum', 44, 'mid', 'hover', 2, 0.4, 'biotope_amazon', 20, 300, [27,30], [4.5,6.5], 'hard', 'semi-aggressive', 'omnivore', 'Cá có vây rất cao và dáng lượn chậm. Cần bể cao, nước mềm và ổn định.'],
+  ['endler', 'Bảy màu rừng', 'Poecilia wingei', 30, 'top mid', 'wander', 3, 1.4, 'biotope_asia', 4, 30, [22,28], [7,8], 'easy', 'peaceful', 'omnivore', 'Cá đẻ con nhỏ, linh hoạt và nhiều mảng màu. Thích sống theo nhóm trong bể nhiều cây.'],
+  ['paradise_fish', 'Cờ / Thiên đường', 'Macropodus opercularis', 52, 'top mid', 'surface_gulp', 1, 0.7, 'biotope_asia balcony_jar foam_box', 10, 60, [18,26], [6,8], 'easy', 'aggressive', 'omnivore', 'Cá có tính lãnh thổ và thường lên mặt đớp khí. Cần cây rậm để chia không gian sống.'],
+  ['platy', 'Mún', 'Xiphophorus maculatus', 40, 'mid', 'wander', 3, 1, 'biotope_asia paludarium', 6, 60, [22,28], [7,8.2], 'easy', 'peaceful', 'omnivore', 'Cá đẻ con hiền và dễ nuôi theo nhóm. Thường rỉa thức ăn trên lá cây.'],
+  ['zebra_danio', 'Sọc ngựa', 'Danio rerio', 42, 'top mid', 'school', 6, 1.8, 'stream', 5, 60, [18,26], [6.5,8], 'easy', 'peaceful', 'omnivore', 'Cá sọc ngang bơi rất nhanh và thích dòng chảy. Cần bể dài có nắp để tránh nhảy.'],
+  ['stream_goby', 'Bống suối', 'Rhinogobius sp.', 40, 'bottom', 'rest', 1, 0.8, 'stream', 6, 60, [18,26], [6.5,8], 'medium', 'semi-aggressive', 'carnivore', 'Cá thường đậu trên đá rồi nhảy từng quãng. Ưa dòng chảy và nước giàu oxy.'],
+  ['hillstream_loach', 'Tỳ bà bướm', 'Sewellia lineolata', 44, 'bottom', 'glass_cling', 3, 0.6, 'stream', 6, 80, [20,25], [6.5,7.5], 'medium', 'peaceful', 'omnivore', 'Cá thân dẹt bám đá hoặc kính và trượt kiếm ăn. Cần dòng chảy mạnh và nhiều oxy.'],
+  ['stream_loach', 'Chạch suối', 'Schistura sp.', 50, 'bottom', 'forage', 1, 0.9, 'stream', 10, 80, [20,26], [6.5,7.5], 'medium', 'semi-aggressive', 'omnivore', 'Cá đáy thon dài thích chui khe đá. Cần nhiều hang nhỏ và nước lưu thông tốt.'],
+  ['white_cloud', 'Trâm', 'Tanichthys albonubes', 36, 'mid', 'school', 6, 1.2, 'stream', 4, 40, [16,24], [6,8], 'easy', 'peaceful', 'omnivore', 'Tên Trâm đang tạm gán cho cá mây trắng, cần xác nhận loài. Cá sống đàn và chịu nước mát.'],
+  ['molly', 'Bình tích', 'Poecilia sphenops', 46, 'mid', 'forage', 3, 1, 'paludarium', 10, 80, [24,28], [7,8.5], 'easy', 'peaceful', 'omnivore', 'Cá đẻ con thường rỉa rêu theo nhóm. Ưa nước có khoáng và không gian bơi thoáng.'],
+  ['fancy_goldfish', 'Ba đuôi', 'Carassius auratus', 64, 'mid', 'forage', 1, 0.5, 'balcony_jar foam_box', 20, 100, [18,24], [7,8], 'medium', 'peaceful', 'omnivore', 'Cá vàng đuôi kép bơi chậm và thích rỉa đáy. Thải nhiều nên cần thể tích lớn và lọc tốt.'],
+  ['swordtail', 'Đuôi kiếm', 'Xiphophorus hellerii', 54, 'mid', 'wander', 3, 1.2, 'balcony_jar foam_box', 12, 100, [22,28], [7,8.2], 'easy', 'semi-aggressive', 'omnivore', 'Cá đực có thùy đuôi dưới kéo dài như kiếm. Cá đực có thể rượt nhau nên cần khoảng bơi rộng.'],
+  ['otocinclus', 'Otto', 'Otocinclus sp.', 34, 'bottom', 'glass_cling', 6, 0.6, 'lowtech', 4, 40, [22,27], [6,7.5], 'medium', 'peaceful', 'herbivore', 'Cá nhỏ bám kính và lá để rỉa rêu. Cần bể đã ổn định và nguồn thức ăn bổ sung.'],
+  ['bumblebee_goby', 'Bống vàng', 'Brachygobius sp.', 28, 'bottom', 'rest', 1, 0.5, 'lowtech', 4, 40, [24,28], [7,8.5], 'hard', 'semi-aggressive', 'carnivore', 'Cá sọc vàng đen thường đậu và giữ lãnh thổ nhỏ. Cần xác định đúng loài để chọn nước ngọt hoặc lợ phù hợp.'],
+  ['bristlenose', 'Tỳ bà mini', 'Ancistrus sp.', 48, 'bottom', 'glass_cling', 1, 0.6, 'lowtech', 12, 100, [22,28], [6,7.5], 'easy', 'peaceful', 'herbivore', 'Cá bám gỗ và kính, hoạt động nhiều về đêm. Cần lũa và thức ăn thực vật bổ sung.'],
+  ['black_skirt', 'Cánh buồm', 'Gymnocorymbus ternetzi', 40, 'mid', 'school', 6, 1, 'lowtech', 6, 80, [20,26], [6,7.5], 'easy', 'semi-aggressive', 'omnivore', 'Cá thân cao với vây hậu môn như cánh buồm. Nên nuôi đàn để giảm rượt đuổi.'],
+  ['tiger_barb', 'Tứ vân', 'Puntigrus tetrazona', 42, 'mid', 'school', 8, 1.3, 'lowtech', 7, 80, [22,28], [6,7.5], 'easy', 'semi-aggressive', 'omnivore', 'Cá có bốn sọc đen, bơi đàn hoạt bát và hay cắn vây. Tránh ghép với Betta hoặc Thần tiên.'],
+];
+
+export const catalogSpecies = rows.map(([speciesKey, commonName, sciName, bodyPx, zone, behavior,
+  schoolMin, speed, styles, adultSize, minTankSize, temp, ph, difficulty, temperament, diet, description]) => ({
+  speciesKey, commonName, sciName, category: 'fish', adultSize, minTankSize, difficulty,
+  careLevel: { easy: 'low', medium: 'medium', hard: 'high' }[difficulty], temperament, diet, description,
+  tempRange: { min: temp[0], max: temp[1] }, phRange: { min: ph[0], max: ph[1] },
+  tags: [...styles.split(' ').map((style) => `style:${style}`),
+    ...(speciesKey === 'white_cloud' ? ['cần xác nhận loài'] : [])],
+  render: { spriteKey: speciesKey, canvas: ['discus', 'altum_angel', 'fancy_goldfish'].includes(speciesKey) ? 96 : 64,
+    bodyPx, swimZone: zone.split(' '), behavior, schoolMin, speed,
+    ...(speciesKey === 'bristlenose' ? { nocturnal: true } : {}),
+    ...(['hillstream_loach', 'otocinclus', 'bristlenose'].includes(speciesKey) ? { clingsGlass: true } : {}) },
+}));
+
+const plantRows = [
+  ['carpet_grass', 'Trân châu Cuba', 'Hemianthus callitrichoides', 'high', 'required', 'hard', 'foreground', 'nature iwagumi dutch', 24],
+  ['anubias', 'Ráy Anubias', 'Anubias barteri', 'low', 'not_needed', 'easy', 'midground', 'nature lowtech paludarium', 48],
+  ['java_fern', 'Dương xỉ Java', 'Microsorum pteropus', 'low', 'not_needed', 'easy', 'midground', 'nature lowtech biotope_asia stream paludarium', 80],
+  ['rotala', 'Luân thảo', 'Rotala rotundifolia', 'high', 'optional', 'medium', 'background', 'nature dutch', 120],
+  ['vallisneria', 'Cỏ hẹ', 'Vallisneria spiralis', 'medium', 'not_needed', 'easy', 'background', 'nature biotope_asia biotope_amazon lowtech', 160],
+  ['moss', 'Rêu Java', 'Taxiphyllum barbieri', 'low', 'not_needed', 'easy', 'midground', 'nature lowtech paludarium stream', 32],
+  ['ludwigia_red', 'Diệp tài hồng đỏ', 'Ludwigia repens', 'high', 'optional', 'medium', 'background', 'dutch nature', 120],
+  ['alternanthera', 'Hồng hồ điệp', 'Alternanthera reineckii', 'high', 'required', 'hard', 'midground', 'dutch nature', 80],
+  ['hygrophila', 'Thủy cúc', 'Hygrophila difformis', 'medium', 'optional', 'easy', 'background', 'dutch biotope_asia lowtech', 120],
+  ['dwarf_sag', 'Cỏ thìa lùn', 'Sagittaria subulata', 'medium', 'not_needed', 'easy', 'foreground', 'nature lowtech biotope_amazon', 32],
+  ['cryptocoryne', 'Tiêu thảo', 'Cryptocoryne wendtii', 'low', 'not_needed', 'easy', 'midground', 'nature biotope_asia lowtech', 64],
+  ['bucephalandra', 'Trầu bà thủy sinh Buce', 'Bucephalandra sp.', 'low', 'optional', 'medium', 'midground', 'nature lowtech paludarium stream', 40],
+  ['hornwort', 'Rong đuôi chó', 'Ceratophyllum demersum', 'medium', 'not_needed', 'easy', 'background', 'lowtech balcony_jar foam_box', 120],
+  ['frogbit', 'Bèo Nhật', 'Limnobium laevigatum', 'medium', 'not_needed', 'easy', 'floating', 'lowtech balcony_jar foam_box paludarium biotope_amazon', 24],
+];
+
+export const catalogPlants = plantRows.map(([plantKey, name, sciName, light, co2, difficulty, position, styles, heightPx]) => ({
+  plantKey, name, sciName, light, co2, difficulty, position,
+  tags: styles.split(' ').map((style) => `style:${style}`), render: { spriteKey: plantKey, heightPx },
+}));

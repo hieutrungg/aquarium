@@ -211,7 +211,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _setup_layout_hud() -> void:
 	var cozy := preload("res://ui/cozy_theme.tres")
-	$HUD/Status.offset_right = 350
+	$HUD/Status.offset_right = 330
 	var edit := Button.new()
 	edit.name = "Arrange"
 	edit.text = "Sắp xếp"
@@ -223,8 +223,11 @@ func _setup_layout_hud() -> void:
 	$HUD.add_child(edit)
 	_warnings = Label.new()
 	_warnings.name = "Warnings"
-	_warnings.position = Vector2(358, 8)
-	_warnings.size = Vector2(80, 26)
+	_warnings.position = Vector2(338, 8)
+	_warnings.size = Vector2(100, 26)
+	_warnings.custom_minimum_size = Vector2(100, 26)
+	_warnings.clip_text = true
+	_warnings.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_warnings.theme = cozy
 	_warnings.mouse_filter = Control.MOUSE_FILTER_STOP
 	$HUD.add_child(_warnings)
@@ -316,6 +319,8 @@ func move_prop(index: int, point: Vector2, custom_y: bool) -> void:
 	var x := clampf(snappedf(point.x, 4), ceilf(tank_view.water_rect.position.x / 4) * 4, floorf(tank_view.water_rect.end.x / 4) * 4)
 	var prop: Dictionary = tank_view.layout[index]
 	prop.position = Vector2(x, roundf(point.y) if custom_y else tank_view.get_substrate_y(x))
+	if prop.get("band", "") == "floating":
+		prop.position.y = tank_view.water_rect.position.y + float(preload("res://scripts/tank/PlantLibrary.gd").profile(prop.key).heightPx)
 	tank_view.update_prop(index)
 
 
@@ -329,6 +334,8 @@ func cycle_layer(direction: int) -> void:
 	if _selected_prop < 0:
 		return
 	var prop: Dictionary = tank_view.layout[_selected_prop]
+	if prop.get("band", "") == "floating":
+		return
 	var layers := ["PlantsBack", "PlantsMid", "PlantsFront"] if prop.refType == "plant" else ["HardscapeBack", "HardscapeMid"]
 	prop.layer = layers[clampi(layers.find(prop.layer) + direction, 0, layers.size() - 1)]
 	tank_view.update_prop(_selected_prop)

@@ -1,0 +1,59 @@
+{
+  "key": "foam_box",
+  "substrate": {
+    "tile": "gravel",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#E8D9B5",
+    "grain": "#CDB98F",
+    "rim": "#F4ECD6"
+  },
+  "colors": {
+    "wall": "#B8E1D5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#C3CBC1",
+    "wood_shadow": "#6B5241",
+    "ink": "#F9F5E9"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": false,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 0.0,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+    ],
+    "plants": [
+      {
+        "quantity": 5,
+        "plantKey": "frogbit"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "hygrophila"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "hornwort"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0,
+    "color": "#B8E1D5"
+  },
+  "parallax_layers": 2,
+  "layout_rule": "floating",
+  "light": {
+    "caustics": 0.55,
+    "god_rays": 0.55
+  },
+  "floating_allowed": true,
+  "todo_shape": true
+}

@@ -11,6 +11,7 @@ const SWAY := preload("res://shaders/plant_sway.gdshader")
 const CAUSTICS := preload("res://shaders/caustics.gdshader")
 const RAYS := preload("res://shaders/god_rays.gdshader")
 const TINT := preload("res://shaders/water_tint.gdshader")
+const Plants := preload("res://scripts/tank/PlantLibrary.gd")
 const MAX_FISH := 120
 const LAYERS := ["Wall", "WaterBack", "HardscapeBack", "PlantsBack", "FishBack",
 	"HardscapeMid", "PlantsMid", "FishFront", "Substrate", "PlantsFront", "Particles", "Surface", "Glass"]
@@ -21,6 +22,17 @@ var style: Dictionary = {}
 var layout: Array[Dictionary] = []
 var _layers: Dictionary = {}
 var prop_sprites: Array[Sprite2D] = []
+var _float_time := 0.0
+
+
+func _process(delta: float) -> void:
+	_float_time += delta
+	for i in range(layout.size()):
+		if layout[i].layer != "Surface":
+			continue
+		var prop := layout[i]
+		prop_sprites[i].position.x = prop.position.x + sin(_float_time * 0.18 + prop.phase) * 12
+		prop_sprites[i].rotation = sin(_float_time * 0.4 + prop.phase) * 0.025
 
 
 func _ready() -> void:
@@ -74,10 +86,13 @@ func _on_scene_loaded(dto: Dictionary) -> void:
 		_layers[layer_name] = layer
 	_layers.FishBack.modulate = Color.WHITE.lerp(Color("8FC9BA"), 0.30)
 	_layers.PlantsBack.modulate = Color.WHITE.lerp(Color("8FC9BA"), 0.15)
+	_layers.WaterBack.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	_build_depth()
 	if style.effects.get("god_rays", true):
 		var rays := _effect(_layers.WaterBack, "GodRays", _rect_polygon(water_rect), RAYS)
 		rays.material.set_shader_parameter("rect_size", water_rect.size)
 		rays.material.set_shader_parameter("light_color", Color(style.colors.light))
+		rays.material.set_shader_parameter("intensity", float(style.light.god_rays))
 	if style.effects.get("caustics", true):
 		var lower := Rect2(water_rect.position + Vector2(0, water_rect.size.y / 2), Vector2(water_rect.size.x, water_rect.size.y / 2))
 		_effect(_layers.WaterBack, "WaterCaustics", _rect_polygon(lower), CAUSTICS)
@@ -99,6 +114,9 @@ func _on_scene_loaded(dto: Dictionary) -> void:
 			break
 	var tint := _effect(_layers.Glass, "WaterTint", _rect_polygon(water_rect), TINT)
 	tint.material.set_shader_parameter("turbidity", clampf(float(style.get("turbidity", 0)), 0, 1))
+	var tint_color := Color(str(style.water_tint.color))
+	tint_color.a = clampf(float(style.water_tint.alpha), 0, 1)
+	tint.material.set_shader_parameter("water_color", tint_color)
 	tank_built.emit()
 
 
@@ -111,12 +129,17 @@ func _spawn_prop(prop: Dictionary) -> void:
 	sprite.centered = false
 	sprite.offset = -asset.pivot
 	sprite.position = prop.position
+	sprite.rotation = float(prop.get("lean", 0.0))
+	if prop.get("band", "") == "floating":
+		# Metadata may move the pivot: place the unpadded sprite top at water level.
+		sprite.offset.y = water_rect.position.y - prop.position.y - 2
 	# Mirror around the metadata pivot, keeping the same foot.
 	sprite.scale.x = -1 if prop.flip else 1
 	var sway := ShaderMaterial.new()
 	sway.shader = SWAY
-	sway.set_shader_parameter("strength", clampf(float(style.sway), 0, 2) if prop.kind == "plants" else 0.0)
-	sway.set_shader_parameter("current", float(style.current))
+	sway.set_shader_parameter("strength", clampf(float(Plants.profile(prop.key).sway) * float(style.sway) / 2.0, 0, 2) if prop.kind == "plants" else 0.0)
+	sway.set_shader_parameter("current", float(style.current) * sprite.scale.x if prop.kind == "plants" else 0.0)
+	sway.set_shader_parameter("floating", prop.get("band", "") == "floating")
 	sway.set_shader_parameter("phase", float(prop.phase))
 	sprite.material = sway
 	_layers[prop.layer].add_child(sprite)
@@ -137,6 +160,7 @@ func update_prop(index: int) -> void:
 	var sprite := prop_sprites[index]
 	sprite.position = prop.position
 	sprite.scale.x = -1 if prop.flip else 1
+	sprite.material.set_shader_parameter("current", float(style.current) * sprite.scale.x if prop.kind == "plants" else 0.0)
 	if sprite.get_parent() != _layers[prop.layer]:
 		sprite.reparent(_layers[prop.layer])
 		sprite.position = prop.position
@@ -173,9 +197,23 @@ func _effect(parent: Node2D, effect_name: String, points: PackedVector2Array, sh
 	effect.shader = shader
 	if shader == CAUSTICS:
 		effect.set_shader_parameter("light_color", Color(style.colors.light))
+		effect.set_shader_parameter("intensity", 0.07 * float(style.light.caustics))
 	polygon.material = effect
 	parent.add_child(polygon)
 	return polygon
+
+
+func _build_depth() -> void:
+	# These layers move by fractions of camera travel, behind all scene props.
+	for index in range(clampi(int(style.get("parallax_layers", 3)), 0, 4)):
+		var layer := Parallax2D.new()
+		layer.name = "Depth%d" % index
+		layer.scroll_scale = Vector2(0.15 + index * 0.18, 1)
+		_layers.WaterBack.add_child(layer)
+		var distant := Scenery.new()
+		distant.configure("Distant", water_rect, style, get_substrate_y, [], index)
+		distant.set_meta("depth", index)
+		layer.add_child(distant)
 
 
 func _rect_polygon(rect: Rect2) -> PackedVector2Array:

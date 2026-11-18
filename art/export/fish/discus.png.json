@@ -1,0 +1,26 @@
+{
+  "cell": 13.323529411764707,
+  "offset": {
+    "x": 1.4411764705882284,
+    "y": 13.117647058823522
+  },
+  "logicalSize": {
+    "width": 96,
+    "height": 95
+  },
+  "bbox": {
+    "x": 14,
+    "y": 14,
+    "width": 68,
+    "height": 67
+  },
+  "colors": 16,
+  "warnings": [
+    "Merged 28 palette colors down to 16."
+  ],
+  "anchor": "center",
+  "pivot": {
+    "x": 48,
+    "y": 47.5
+  }
+}

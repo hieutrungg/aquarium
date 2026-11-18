@@ -1,6 +1,8 @@
 extends RefCounted
 ## Style files are data, never executable paths supplied by the host page.
 
+const KEYS := ["nature", "iwagumi", "dutch", "biotope_amazon", "biotope_asia", "stream", "paludarium", "balcony_jar", "foam_box", "lowtech"]
+
 const NATURE := {
 	"key": "nature",
 	"substrate": {"tile": "sand_fine", "back_height": 40, "front_height": 22, "curve": 3,
@@ -26,7 +28,7 @@ const NATURE := {
 static func load_style(key: String) -> Dictionary:
 	var result: Dictionary = NATURE.duplicate(true)
 	_merge(result, _read("nature"))
-	if key != "nature" and key.is_valid_filename() and not key.contains("."):
+	if key != "nature" and key in KEYS:
 		_merge(result, _read(key))
 	return result
 

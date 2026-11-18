@@ -38,4 +38,5 @@ func steering(brain: RefCounted) -> Vector2:
 			separate += away / distance * (26 - distance) / 26.0
 	center /= nearby.size()
 	alignment /= nearby.size()
-	return (center - brain.point) * 0.65 + alignment * 0.8 + separate * float(brain.profile.speed) * 1.5
+	var tight: bool = brain.profile.get("tightSchool", false)
+	return (center - brain.point) * (1.1 if tight else 0.65) + alignment * (1.8 if tight else 0.8) + separate * float(brain.profile.speed) * (0.8 if tight else 1.5)

@@ -1,0 +1,24 @@
+{
+  "cell": 28.676470588235293,
+  "offset": {
+    "x": 19.294117647058826,
+    "y": 16.852941176470598
+  },
+  "logicalSize": {
+    "width": 45,
+    "height": 45
+  },
+  "bbox": {
+    "x": 15,
+    "y": 25,
+    "width": 34,
+    "height": 14
+  },
+  "colors": 11,
+  "warnings": [],
+  "anchor": "center",
+  "pivot": {
+    "x": 32,
+    "y": 32
+  }
+}

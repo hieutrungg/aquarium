@@ -1,0 +1,69 @@
+{
+  "key": "iwagumi",
+  "substrate": {
+    "tile": "sand_white",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#F4ECD6",
+    "grain": "#E8D9B5",
+    "rim": "#F4ECD6"
+  },
+  "colors": {
+    "wall": "#76B5A5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#8B6B4E",
+    "wood_shadow": "#6B5241",
+    "ink": "#35574F"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": true,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 0.0,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+      {
+        "quantity": 1,
+        "type": "rock",
+        "spriteKey": "seiryu_l"
+      },
+      {
+        "quantity": 1,
+        "type": "rock",
+        "spriteKey": "seiryu_m"
+      },
+      {
+        "quantity": 1,
+        "type": "rock",
+        "spriteKey": "seiryu_s"
+      }
+    ],
+    "plants": [
+      {
+        "quantity": 12,
+        "plantKey": "carpet_grass"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "dwarf_sag"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0,
+    "color": "#B8E1D5"
+  },
+  "parallax_layers": 3,
+  "layout_rule": "iwagumi",
+  "light": {
+    "caustics": 0.55,
+    "god_rays": 0.55
+  },
+  "floating_allowed": false
+}

@@ -1,0 +1,80 @@
+{
+  "key": "biotope_asia",
+  "substrate": {
+    "tile": "sand_fine",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#E8D9B5",
+    "grain": "#CDB98F",
+    "rim": "#F4ECD6"
+  },
+  "colors": {
+    "wall": "#76B5A5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#8B6B4E",
+    "wood_shadow": "#6B5241",
+    "ink": "#35574F"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": true,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 0.0,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+      {
+        "spriteKey": "seiryu_l",
+        "quantity": 1
+      },
+      {
+        "spriteKey": "seiryu_m",
+        "quantity": 1
+      },
+      {
+        "spriteKey": "seiryu_s",
+        "quantity": 1
+      },
+      {
+        "spriteKey": "driftwood_branch",
+        "quantity": 1,
+        "position": "background"
+      }
+    ],
+    "plants": [
+      {
+        "quantity": 4,
+        "plantKey": "cryptocoryne"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "java_fern"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "moss"
+      },
+      {
+        "quantity": 2,
+        "plantKey": "frogbit"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0.08,
+    "color": "#C9A46A"
+  },
+  "parallax_layers": 3,
+  "layout_rule": "golden",
+  "light": {
+    "caustics": 0.3,
+    "god_rays": 0.4
+  },
+  "floating_allowed": true,
+  "leaf_litter": true
+}

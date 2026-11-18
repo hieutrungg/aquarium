@@ -1,0 +1,80 @@
+{
+  "key": "lowtech",
+  "substrate": {
+    "tile": "sand_fine",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#E8D9B5",
+    "grain": "#CDB98F",
+    "rim": "#F4ECD6"
+  },
+  "colors": {
+    "wall": "#76B5A5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#8B6B4E",
+    "wood_shadow": "#6B5241",
+    "ink": "#35574F"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": true,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 0.0,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+      {
+        "quantity": 1,
+        "type": "driftwood",
+        "spriteKey": "driftwood_branch"
+      },
+      {
+        "quantity": 2,
+        "type": "rock",
+        "spriteKey": "seiryu_m"
+      }
+    ],
+    "plants": [
+      {
+        "quantity": 3,
+        "plantKey": "anubias"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "java_fern"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "bucephalandra"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "moss"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "hornwort"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "frogbit"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0.04,
+    "color": "#C9A46A"
+  },
+  "parallax_layers": 2,
+  "layout_rule": "epiphyte",
+  "light": {
+    "caustics": 0.5,
+    "god_rays": 0.5
+  },
+  "floating_allowed": true
+}

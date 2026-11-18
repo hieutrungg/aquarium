@@ -2,6 +2,7 @@ shader_type canvas_item;
 render_mode unshaded;
 
 uniform vec2 rect_size = vec2(600.0, 300.0);
+uniform float intensity : hint_range(0.0, 1.0) = 0.55;
 uniform vec4 light_color : source_color = vec4(0.839216, 0.941176, 0.909804, 1.0);
 
 void fragment() {
@@ -14,5 +15,5 @@ void fragment() {
 		beam = max(beam, 1.0 - smoothstep(5.0, 28.0, distance_to_ray));
 	}
 	float bands = floor(clamp(beam * (1.0 - p.y / rect_size.y * 0.7), 0.0, 0.999) * 3.0) / 2.0;
-	COLOR = vec4(light_color.rgb, bands * 0.12);
+	COLOR = vec4(light_color.rgb, bands * 0.12 * intensity);
 }

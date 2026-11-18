@@ -1,0 +1,68 @@
+{
+  "key": "stream",
+  "substrate": {
+    "tile": "gravel",
+    "back_height": 40,
+    "front_height": 22,
+    "curve": 3,
+    "fill": "#9AA59B",
+    "grain": "#6E7D74",
+    "rim": "#F4ECD6"
+  },
+  "colors": {
+    "wall": "#76B5A5",
+    "water": "#B8E1D5",
+    "light": "#D6F0E8",
+    "wood": "#8B6B4E",
+    "wood_shadow": "#6B5241",
+    "ink": "#35574F"
+  },
+  "effects": {
+    "caustics": true,
+    "god_rays": true,
+    "bubbles": true,
+    "particles": true
+  },
+  "sway": 2.0,
+  "current": 1,
+  "turbidity": 0.0,
+  "defaults": {
+    "hardscape": [
+      {
+        "quantity": 2,
+        "type": "rock",
+        "spriteKey": "seiryu_l"
+      },
+      {
+        "quantity": 3,
+        "type": "rock",
+        "spriteKey": "seiryu_m"
+      }
+    ],
+    "plants": [
+      {
+        "quantity": 5,
+        "plantKey": "vallisneria"
+      },
+      {
+        "quantity": 4,
+        "plantKey": "moss"
+      },
+      {
+        "quantity": 3,
+        "plantKey": "bucephalandra"
+      }
+    ]
+  },
+  "water_tint": {
+    "alpha": 0,
+    "color": "#B8E1D5"
+  },
+  "parallax_layers": 2,
+  "layout_rule": "golden",
+  "light": {
+    "caustics": 0.55,
+    "god_rays": 0.55
+  },
+  "floating_allowed": false
+}

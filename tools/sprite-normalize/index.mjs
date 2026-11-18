@@ -16,13 +16,14 @@ Usage: node sprite-normalize/index.mjs --in <raw.png> --out <out.png> --canvas <
   --padding <n>     Minimum transparent pixels on EACH side (default: 4)
   --max-colors <n>  Maximum opaque colors (default: 16)
   --bg-tol <n>      Background per-channel tolerance, 0..255 (default: 24)
+  --holes <n>       Also clear enclosed background islands of >= n raw pixels (plants/props; default 0 = off)
   --help, -h        Show this help
 Writes <out.png>.json; stdout is a JSON summary. Exit 2: foreground does not fit.
 --cell, --target-w, --target-h and --tile are mutually exclusive.
 Tile mode does not require --canvas; if supplied, canvas is ignored.
 `;
 try {
-  const values = args(Object.fromEntries(['in', 'out', 'canvas', 'cell', 'target-w', 'target-h', 'anchor', 'tile', 'palette', 'padding', 'max-colors', 'bg-tol'].map(k => [k, { type: 'string' }])));
+  const values = args(Object.fromEntries(['in', 'out', 'canvas', 'cell', 'target-w', 'target-h', 'anchor', 'tile', 'palette', 'padding', 'max-colors', 'bg-tol', 'holes'].map(k => [k, { type: 'string' }])));
   if (values.help) console.log(help);
   else {
     required(values, values.tile === undefined ? ['in', 'out', 'canvas'] : ['in', 'out']);
@@ -39,7 +40,8 @@ try {
       anchor: anchorOption(values.anchor),
       padding: integer(values.padding ?? 4, 'padding', 0, 1024),
       maxColors: integer(values['max-colors'] ?? 16, 'max-colors', 1, 256),
-      bgTol: integer(values['bg-tol'] ?? 24, 'bg-tol', 0, 255)
+      bgTol: integer(values['bg-tol'] ?? 24, 'bg-tol', 0, 255),
+      holes: integer(values.holes ?? 0, 'holes', 0, 1000000)
     };
     const palette = await readPalette(values.palette ?? defaultPalette);
     const result = normalize(await readPng(values.in), palette, options);

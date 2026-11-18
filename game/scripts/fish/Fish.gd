@@ -41,14 +41,20 @@ func setup(key: String, render: Dictionary, water: Rect2, ground: Callable, inde
 				pivot = Vector2(float(p.get("x", pivot.x)), float(p.get("y", pivot.y)))
 				var box: Dictionary = metadata.get("bbox", {})
 				bbox = Rect2(float(box.get("x", 0)), float(box.get("y", 0)), float(box.get("width", size.x)), float(box.get("height", size.y)))
+		pivot = pivot.round()
 		sprite.offset = -pivot.round()
 		# Keep the full silhouette, including its bend, inside water and above sand.
-		var bend_margin := ceilf(float(profile.bodyBend) + float(profile.finFlutter))
+		var tilt_margin := ceilf(bbox.size.x * 0.268 * 0.5) if profile.get("headUp", false) else 0.0
+		var bend_margin := ceilf(float(profile.bodyBend) + float(profile.finFlutter)) + tilt_margin
 		var half_x := ceilf(maxf(pivot.x - bbox.position.x, bbox.end.x - pivot.x)) + 1
 		var half_y := ceilf(maxf(pivot.y - bbox.position.y, bbox.end.y - pivot.y)) + bend_margin
 		brain.bounds = water.grow(-4).grow_individual(-half_x, -half_y, -half_x, -half_y)
 		brain.floor_clearance = minf(12, ceilf(bbox.end.y - pivot.y) + bend_margin) if brain.is_bottom() else ceilf(bbox.end.y - pivot.y) + bend_margin
+		if brain.flag("perch"):
+			brain.floor_clearance = 4
+			brain.bounds.size.y = water.end.y - 4 - brain.bounds.position.y
 		brain.constrain()
+		brain.home = brain.point
 		position = brain.point.round()
 		swim = ShaderMaterial.new()
 		swim.shader = SWIM
@@ -57,6 +63,8 @@ func setup(key: String, render: Dictionary, water: Rect2, ground: Callable, inde
 		swim.set_shader_parameter("body_x", Vector2(bbox.position.x / size.x, bbox.end.x / size.x))
 		swim.set_shader_parameter("body_bend", float(profile.bodyBend))
 		swim.set_shader_parameter("fin_flutter", float(profile.finFlutter))
+		swim.set_shader_parameter("head_up", 0.268 if profile.get("headUp", false) else 0.0)
+		swim.set_shader_parameter("pivot_x", pivot.x / size.x)
 		sprite.material = swim
 		if not images.has(path):
 			images[path] = sprite.texture.get_image()
@@ -94,6 +102,7 @@ func advance_visual(delta: float) -> void:
 		sprite.scale.x = squash
 		sprite.offset.x = -roundf(sprite.texture.get_width() - pivot.x if facing_left else pivot.x)
 		swim.set_shader_parameter("flip", facing_left)
+		swim.set_shader_parameter("clinging", brain.state in ["cling", "cling_slide"])
 		var turning := (brain.velocity - _last_velocity).length() / maxf(delta * float(profile.speed), 0.01)
 		swim.set_shader_parameter("activity", minf(3, brain.velocity.length() / float(profile.speed) + turning * 0.15))
 	elif fallback != null:
@@ -118,6 +127,8 @@ func hit_test(world_point: Vector2) -> bool:
 	var pixel := local - sprite.offset
 	if facing_left:
 		pixel.x = sprite.texture.get_width() - 1 - pixel.x
+	if profile.get("headUp", false):
+		pixel.y -= floorf(-0.268 * (pixel.x - pivot.x) + 0.5)
 	# A small bbox margin covers the shader's integer displacement.
 	if not bbox.grow(float(profile.bodyBend) + float(profile.finFlutter)).has_point(pixel):
 		return false

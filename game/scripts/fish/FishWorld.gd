@@ -13,6 +13,7 @@ var last_step_usec := 0
 var demo := false
 var interactions_enabled := true
 var rng := RandomNumberGenerator.new()
+var simulation_time := 0.0
 
 func setup(view: Node2D) -> void:
 	tank = view
@@ -24,6 +25,7 @@ func rebuild() -> void:
 	brains.clear()
 	pellets.clear()
 	frame = 0
+	simulation_time = 0
 	rng.seed = 12012
 	for layer: Node2D in tank.fish_layers():
 		for fish in layer.get_children():
@@ -47,12 +49,45 @@ func _process(delta: float) -> void:
 
 func step(delta: float) -> void:
 	var started := Time.get_ticks_usec()
+	simulation_time += delta
+	var clock := Time.get_time_dict_from_system()
+	var hour := float(clock.hour) + float(clock.minute) / 60.0
+	var bridge := get_node_or_null("/root/Bridge")
+	var schedule: Variant = bridge.current_dto.get("tank", {}).get("lightSchedule", null) if bridge != null else null
+	var surfaces: Array[Vector2] = []
+	var shelters: Array[Vector2] = []
+	# Existing TankView prop sprites expose the current rendered coordinates.
+	for prop: Sprite2D in tank.prop_sprites:
+		surfaces.append(prop.position + Vector2(0, -prop.texture.get_height() * 0.35))
+		if str(prop.get_parent().name).begins_with("Hardscape"):
+			shelters.append(prop.position + Vector2(8, 0))
+	# One shared heading/turn clock for the whole rummynose school.
+	var school_center := Vector2.ZERO
+	var school_count := 0
+	for brain in brains:
+		if brain.species == "rummynose":
+			school_center += brain.point
+			school_count += 1
+	if school_count > 0:
+		school_center /= school_count
+	var heading := Vector2.from_angle(sin(floorf(simulation_time / 6.0) * 2.4) * 0.35)
+	if school_count > 0 and fmod(simulation_time, 24.0) >= 12:
+		heading.x *= -1
+	if school_count > 0 and (school_center.x < tank.get_water_rect().position.x + 70 or school_center.x > tank.get_water_rect().end.x - 70):
+		heading.x = absf(heading.x) * (1 if school_center.x < tank.get_water_rect().get_center().x else -1)
 	boids.rebuild(brains)
 	pellets = pellets.filter(func(p: Variant) -> bool: return is_instance_valid(p) and not p.consumed)
 	for pellet in pellets:
 		pellet.advance(delta)
 	for fish in fishes:
 		var brain: RefCounted = fish.brain
+		if brain.flag("nocturnal"):
+			brain.set_light_schedule(schedule, hour)
+		if brain.flag("territorial") or brain.flag("finNipper"):
+			brain.neighbors = boids.neighbors(brain.home if brain.flag("territorial") else brain.point, 140, "", brain.id)
+		brain.school_heading = heading if brain.species == "rummynose" else Vector2.ZERO
+		brain.surfaces = surfaces
+		brain.shelters = shelters
 		# Alternate neighbor work for each fish, retaining the previous force.
 		if (frame + brain.id) % 2 == 0:
 			if brain.profile.behavior == "school" or brain.species == "guppy":
@@ -63,11 +98,6 @@ func step(delta: float) -> void:
 				var distance := away.length()
 				if distance > 0.01 and distance < 18:
 					brain.social_force += away / distance * (18 - distance) * 1.5
-				# Mild territorial pursuit, with the visitor steering away; no damage.
-				if brain.species == "betta" and entry.species != "betta" and distance > 12:
-					brain.social_force -= away.normalized() * 7
-				elif entry.species == "betta" and brain.species != "betta":
-					brain.social_force += away.normalized() * 15
 		if brain.state not in ["flee", "eat", "surface_gulp"]:
 			var closest: Variant = null
 			var distance_sq := 160.0 * 160.0

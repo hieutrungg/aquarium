@@ -17,7 +17,7 @@ func configure(layer_role: String, rect: Rect2, data: Dictionary, substrate: Cal
 	water = rect
 	style = data
 	ground = substrate
-	aerated = "filter" in equipment or "co2" in equipment
+	aerated = "filter" in equipment or "co2" in equipment or float(style.current) > 0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	if role == "Particles":
@@ -45,6 +45,7 @@ func _draw() -> void:
 	match role:
 		"Wall": _wall()
 		"WaterBack": draw_rect(water, Color(style.colors.water))
+		"Distant": _distant()
 		"Substrate": _substrate()
 		"Particles": _particles()
 		"Surface": _surface()
@@ -78,6 +79,12 @@ func _substrate() -> void:
 		_substrate_tex = _bake_substrate()
 	if _substrate_tex != null:
 		draw_texture(_substrate_tex, Vector2(water.position.x, _substrate_top))
+	if style.get("leaf_litter", false):
+		for i in range(22):
+			var x := water.position.x + 12 + fposmod(i * 47.0, water.size.x - 24)
+			var y := float(ground.call(x)) + 3 + i % 9
+			draw_colored_polygon(PackedVector2Array([Vector2(x - 5, y), Vector2(x, y - 2), Vector2(x + 6, y + 1), Vector2(x, y + 3)]), Color("9C8463"))
+			draw_line(Vector2(x - 3, y), Vector2(x + 4, y + 1), Color("6B5241"))
 
 
 func _bake_substrate() -> Texture2D:
@@ -121,7 +128,7 @@ func _particles() -> void:
 		draw_line(Vector2(emitter_x, bottom), Vector2(emitter_x, water.position.y + 2), Color("8FC9BA"))
 		for bubble in _bubbles:
 			var age := fposmod(bubble.x * rise + _time * (12 + bubble.z * 3), rise)
-			var x := roundf(emitter_x + sin(age * 0.13 + bubble.y) * 3)
+			var x := roundf(water.position.x + fposmod(emitter_x - water.position.x + sin(age * 0.13 + bubble.y) * 3 + age * float(style.current) * 1.7, water.size.x))
 			var y := roundf(bottom - age)
 			if bubble.z <= 1:
 				draw_rect(Rect2(x, y, 1, 1), light)
@@ -135,6 +142,18 @@ func _surface() -> void:
 	for index in range(0, int(water.size.x) - 2, 3):
 		var y := water.position.y + 1 + roundf(sin(index * 0.065 + _time * 1.4))
 		draw_rect(Rect2(water.position.x + index, y, mini(3, int(water.size.x) - index), 1), light)
+
+
+func _distant() -> void:
+	var depth := int(get_meta("depth", 0))
+	var color := Color(style.colors.wall).lerp(Color(style.colors.water), 0.65)
+	color.a = 0.12 + depth * 0.03
+	# Muted broad silhouettes suggest distant foliage without adding sharp detail.
+	for i in range(16):
+		var x := water.position.x + i * water.size.x / 15.0
+		var bottom := water.end.y - 28
+		var h := 55.0 + fposmod(i * 31.0 + depth * 23, 110)
+		draw_colored_polygon(PackedVector2Array([Vector2(x - 14, bottom), Vector2(x - 9, bottom - h * 0.7), Vector2(x + depth * 5, bottom - h), Vector2(x + 13, bottom - h * 0.5), Vector2(x + 17, bottom)]), color)
 
 
 func _glass() -> void:

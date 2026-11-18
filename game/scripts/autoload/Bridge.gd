@@ -47,9 +47,25 @@ func _is_embedded() -> bool:
 func _load_dev_scene() -> void:
 	var stress := "--stress" in OS.get_cmdline_user_args() or "--stress" in OS.get_cmdline_args()
 	var path := "res://data/dev/sample_scene_stress.json" if stress else "res://data/dev/sample_scene_nature.json"
+	var style_key := "nature"
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--style="):
+			style_key = arg.trim_prefix("--style=")
+	if OS.has_feature("web") and not _is_embedded():
+		var query: Variant = JavaScriptBridge.eval("new URLSearchParams(location.search).get('style') || 'nature'", true)
+		style_key = str(query)
+	style_key = str(preload("res://scripts/tank/StyleLibrary.gd").load_style(style_key).key)
+	if not stress and style_key in ["dutch", "lowtech"]:
+		path = "res://data/dev/sample_scene_%s.json" % style_key
 	var json := FileAccess.get_file_as_string(path)
 	var dto: Variant = JSON.parse_string(json)
 	if dto is Dictionary:
+		if not stress and style_key not in ["nature", "dutch", "lowtech"]:
+			dto.tank.style = style_key
+			dto.tank.id = "dev-" + style_key
+			dto.plants = []
+			dto.hardscape = []
+			dto.scene.props = []
 		_receive("scene:load", dto)
 	else:
 		push_error("Cannot read " + path)

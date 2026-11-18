@@ -71,7 +71,8 @@ func run() -> void:
 	fish.highlight(true)
 	check(fish.swim.get_shader_parameter("highlighted"), "outline uniform")
 	main.info.show_fish(cory, {"temp": 35, "ph": 9})
-	check(main.info.get_node("Margin/Content/Warning").text.count("⚠") == 2, "temperature + pH warnings")
+	var warning_text: String = main.info.get_node("Margin/Content/Warning").text
+	check(warning_text.split("\n").size() == 2 and warning_text.contains("Nhiệt độ 35") and warning_text.contains("pH 9"), "temperature + pH warnings")
 	main.info.show_fish(cory, {"temp": 23, "ph": 7})
 	check(not main.info.get_node("Margin/Content/Warning").visible, "healthy range hides warning")
 	# Use a known opaque source pixel, accounting for current facing and pivot.

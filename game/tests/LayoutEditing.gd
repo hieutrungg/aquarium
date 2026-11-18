@@ -110,7 +110,7 @@ func run() -> void:
 	main.set_feeding(true)
 	bridge._receive("scene:patch", {"water": {"temp": 31}})
 	check(main._camera_x == 410 and main.camera.position.x == 410 and main.feeding, "patch preserves pan and feeding mode")
-	check(main._water == {"temp": 31} and main._warnings.text == "⚠ 1" and main._warnings.tooltip_text == "Nhiệt độ cao", "patch replaces water and shows warning tooltip")
+	check(main._water == {"temp": 31} and main._warnings.text == "Cảnh báo 1" and main._warnings.tooltip_text == "Nhiệt độ cao", "patch replaces water and shows warning tooltip")
 	main.set_feeding(false)
 	main.followed = main.world.fishes[0]
 	main.info.show_fish(main.followed, main._water)
@@ -129,7 +129,8 @@ func run() -> void:
 	check(real_fish.fallback != null and real_fish.brain.profile.behavior == "forage" and real_fish.brain.is_bottom(), "missing sprite follows render behavior")
 	main.info.show_fish(real_fish, {"temp": 25, "ph": 8})
 	check(main.info.get_node("Margin/Content/Name").text == "Cá thật" and main.info.get_node("Margin/Content/Science").text == "Testus realis", "InfoCard prioritizes real DTO names")
-	check(main.info.get_node("Margin/Content/Warning").text.count("⚠") == 2, "DTO range dictionaries used")
+	var warning_text: String = main.info.get_node("Margin/Content/Warning").text
+	check(warning_text.split("\n").size() == 2 and warning_text.contains("20–22") and warning_text.contains("6–7"), "DTO range dictionaries used")
 	main.info.get_node("Margin/Content/Details").pressed.emit()
 	check(sent.back() == {"type": "open:species", "payload": {"speciesKey": "no_sprite_yet", "speciesSlug": "ca-that"}}, "details includes speciesKey and speciesSlug")
 	key.keycode = KEY_E

@@ -4,7 +4,7 @@ import { nearest } from './palette.mjs';
 const near = (a, b, tol) => Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b)) <= tol;
 const lightNeutral = c => Math.min(c.r, c.g, c.b) >= 160 && Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b) <= 30;
 
-export function foregroundMask(png, tolerance = 24) {
+export function foregroundMask(png, tolerance = 24, holes = 0) {
   const { width: w, height: h, data } = png;
   const mask = new Uint8Array(w * h);
   let hasAlpha = false;
@@ -49,7 +49,32 @@ export function foregroundMask(png, tolerance = 24) {
     if (i >= w) visit(i - w);
     if (i + w < mask.length) visit(i + w);
   }
+  if (holes > 0) removeEnclosedBackground(data, w, mask, backgrounds, tolerance, holes);
   return mask;
+}
+
+// Enclosed background (e.g. white gaps between leaves) is not reachable from the edge.
+// Clear background-coloured islands of at least `minArea` raw pixels; smaller ones are real highlights.
+function removeEnclosedBackground(data, w, mask, backgrounds, tolerance, minArea) {
+  const seen = new Uint8Array(mask.length);
+  const stack = [];
+  for (let start = 0; start < mask.length; start++) {
+    if (seen[start] || !mask[start] || !backgrounds.some(c => near(pixel(data, start * 4), c, tolerance))) continue;
+    const region = [];
+    stack.push(start);
+    seen[start] = 1;
+    while (stack.length) {
+      const i = stack.pop(), x = i % w;
+      region.push(i);
+      for (const n of [x > 0 ? i - 1 : -1, x + 1 < w ? i + 1 : -1, i - w, i + w]) {
+        if (n < 0 || n >= mask.length || seen[n] || !mask[n]) continue;
+        if (!backgrounds.some(c => near(pixel(data, n * 4), c, tolerance))) continue;
+        seen[n] = 1;
+        stack.push(n);
+      }
+    }
+    if (region.length >= minArea) for (const i of region) mask[i] = 0;
+  }
 }
 
 function scanRuns(png, mask) {
@@ -174,6 +199,7 @@ function quantize(png, palette, maxColors, warnings) {
 
 export function normalize(png, palette, options = {}) {
   const { canvas = 64, cell = 'auto', padding = 4, maxColors = 16, bgTol = 24,
+    holes = 0,
     targetW, targetH, anchor = 'center', tile } = options;
   const modes = [options.cell, targetW, targetH, tile].filter(v => v !== undefined);
   if (modes.length > 1) throw new Error('--cell, --target-w, --target-h and --tile are mutually exclusive');
@@ -190,7 +216,7 @@ export function normalize(png, palette, options = {}) {
     return { output, summary: { ...grid, tile, logicalSize: { width: tile, height: tile }, bbox, colors, warnings, seamScore: seamScore(output) } };
   }
   const { width: canvasW, height: canvasH } = typeof canvas === 'number' ? { width: canvas, height: canvas } : canvas;
-  const mask = foregroundMask(png, bgTol);
+  const mask = foregroundMask(png, bgTol, holes);
   let grid;
   if (targetW !== undefined || targetH !== undefined) {
     let left = png.width, top = png.height, right = -1, bottom = -1;

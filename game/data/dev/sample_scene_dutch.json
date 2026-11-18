@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "tank": {
+    "id": "dev-dutch",
+    "name": "Demo dutch",
+    "style": "dutch",
+    "shape": "rect",
+    "dimensions": {
+      "length": 90,
+      "width": 45,
+      "height": 45
+    },
+    "volume": 180,
+    "equipment": [
+      "filter",
+      "light",
+      "co2"
+    ],
+    "lightSchedule": {
+      "on": "08:00",
+      "off": "18:00"
+    }
+  },
+  "livestock": [
+    {
+      "id": "lv-rainbow",
+      "speciesKey": "rainbowfish",
+      "name": "Cầu vồng",
+      "quantity": 8,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "mid"
+        ],
+        "behavior": "school",
+        "speed": 1.2
+      }
+    },
+    {
+      "id": "lv-gourami",
+      "speciesKey": "dwarf_gourami",
+      "name": "Sặc gấm",
+      "quantity": 1,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "top",
+          "mid"
+        ],
+        "behavior": "wander",
+        "speed": 0.7
+      }
+    },
+    {
+      "id": "lv-ram",
+      "speciesKey": "ram",
+      "name": "Phượng hoàng",
+      "quantity": 2,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "bottom",
+          "mid"
+        ],
+        "behavior": "wander",
+        "speed": 0.8
+      }
+    },
+    {
+      "id": "lv-angel",
+      "speciesKey": "angelfish",
+      "name": "Thần tiên",
+      "quantity": 2,
+      "variant": null,
+      "render": {
+        "canvas": 64,
+        "bodyPx": 40,
+        "swimZone": [
+          "mid"
+        ],
+        "behavior": "hover",
+        "speed": 0.7
+      }
+    }
+  ],
+  "plants": [
+    {
+      "quantity": 5,
+      "plantKey": "ludwigia_red",
+      "id": "pl-ludwigia_red"
+    },
+    {
+      "quantity": 4,
+      "plantKey": "alternanthera",
+      "id": "pl-alternanthera"
+    },
+    {
+      "quantity": 5,
+      "plantKey": "hygrophila",
+      "id": "pl-hygrophila"
+    },
+    {
+      "quantity": 5,
+      "plantKey": "rotala",
+      "id": "pl-rotala"
+    },
+    {
+      "quantity": 4,
+      "plantKey": "cryptocoryne",
+      "id": "pl-cryptocoryne"
+    },
+    {
+      "quantity": 8,
+      "plantKey": "dwarf_sag",
+      "id": "pl-dwarf_sag"
+    }
+  ],
+  "hardscape": [],
+  "water": {
+    "temp": 25.5,
+    "ph": 6.8,
+    "nitrate": 15,
+    "measuredAt": "2026-11-15T08:00:00Z"
+  },
+  "care": {
+    "overdue": [
+      "water_change"
+    ],
+    "daysSinceWaterChange": 9,
+    "lastFed": "2026-11-17T07:30:00Z"
+  },
+  "scene": {
+    "props": [],
+    "camera": {
+      "x": 0
+    }
+  },
+  "warnings": []
+}

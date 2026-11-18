@@ -1,0 +1,86 @@
+{
+  "carpet_grass": {
+    "heightPx": 16,
+    "colorGroup": "green",
+    "sway": 0.35,
+    "band": "foreground"
+  },
+  "anubias": {
+    "heightPx": 40,
+    "colorGroup": "dark_green",
+    "sway": 0.6,
+    "band": "epiphyte"
+  },
+  "java_fern": {
+    "heightPx": 64,
+    "colorGroup": "green",
+    "sway": 1.2,
+    "band": "epiphyte"
+  },
+  "rotala": {
+    "heightPx": 96,
+    "colorGroup": "gold",
+    "sway": 1.8,
+    "band": "background"
+  },
+  "vallisneria": {
+    "heightPx": 112,
+    "colorGroup": "green",
+    "sway": 2,
+    "band": "background"
+  },
+  "moss": {
+    "heightPx": 16,
+    "colorGroup": "dark_green",
+    "sway": 0.4,
+    "band": "epiphyte"
+  },
+  "ludwigia_red": {
+    "heightPx": 96,
+    "colorGroup": "red",
+    "sway": 1.8,
+    "band": "background"
+  },
+  "alternanthera": {
+    "heightPx": 48,
+    "colorGroup": "red",
+    "sway": 1,
+    "band": "midground"
+  },
+  "hygrophila": {
+    "heightPx": 104,
+    "colorGroup": "green",
+    "sway": 1.8,
+    "band": "background"
+  },
+  "dwarf_sag": {
+    "heightPx": 20,
+    "colorGroup": "green",
+    "sway": 0.4,
+    "band": "foreground"
+  },
+  "cryptocoryne": {
+    "heightPx": 40,
+    "colorGroup": "gold",
+    "sway": 0.8,
+    "band": "midground"
+  },
+  "bucephalandra": {
+    "heightPx": 20,
+    "colorGroup": "dark_green",
+    "sway": 0.4,
+    "band": "epiphyte"
+  },
+  "hornwort": {
+    "heightPx": 112,
+    "colorGroup": "green",
+    "sway": 2,
+    "band": "background"
+  },
+  "frogbit": {
+    "heightPx": 32,
+    "colorGroup": "green",
+    "sway": 0.4,
+    "band": "floating"
+  }
+}
