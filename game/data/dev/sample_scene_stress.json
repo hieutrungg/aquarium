@@ -1,0 +1,181 @@
+﻿{
+    "version":  1,
+    "tank":  {
+                 "id":  "dev-stress",
+                 "name":  "Bể kiểm tra 120 cá",
+                 "style":  "nature",
+                 "shape":  "rect",
+                 "dimensions":  {
+                                    "length":  60,
+                                    "width":  30,
+                                    "height":  36
+                                },
+                 "volume":  65,
+                 "equipment":  [
+                                   "filter",
+                                   "light",
+                                   "co2"
+                               ],
+                 "lightSchedule":  {
+                                       "on":  "08:00",
+                                       "off":  "18:00"
+                                   }
+             },
+    "livestock":  [
+                      {
+                          "speciesKey":  "neon_tetra",
+                          "name":  "Neon xanh",
+                          "quantity":  100,
+                          "variant":  null,
+                          "render":  {
+                                         "canvas":  64,
+                                         "bodyPx":  38,
+                                         "swimZone":  [
+                                                          "mid"
+                                                      ],
+                                         "behavior":  "school",
+                                         "speed":  1
+                                     }
+                      },
+                      {
+                          "speciesKey":  "betta",
+                          "name":  "Betta",
+                          "quantity":  2,
+                          "variant":  null,
+                          "render":  {
+                                         "canvas":  64,
+                                         "bodyPx":  50,
+                                         "swimZone":  [
+                                                          "top",
+                                                          "mid"
+                                                      ],
+                                         "behavior":  "wander",
+                                         "speed":  0.6
+                                     }
+                      },
+                      {
+                          "speciesKey":  "angelfish",
+                          "name":  "Thần tiên",
+                          "quantity":  3,
+                          "variant":  null,
+                          "render":  {
+                                         "canvas":  64,
+                                         "bodyPx":  34,
+                                         "swimZone":  [
+                                                          "mid"
+                                                      ],
+                                         "behavior":  "hover",
+                                         "speed":  0.7
+                                     }
+                      },
+                      {
+                          "speciesKey":  "guppy",
+                          "name":  "Bảy màu",
+                          "quantity":  9,
+                          "variant":  null,
+                          "render":  {
+                                         "canvas":  64,
+                                         "bodyPx":  36,
+                                         "swimZone":  [
+                                                          "top",
+                                                          "mid"
+                                                      ],
+                                         "behavior":  "wander",
+                                         "speed":  1.1
+                                     }
+                      },
+                      {
+                          "speciesKey":  "panda_cory",
+                          "name":  "Chuột Panda",
+                          "quantity":  6,
+                          "variant":  null,
+                          "render":  {
+                                         "canvas":  64,
+                                         "bodyPx":  34,
+                                         "swimZone":  [
+                                                          "bottom"
+                                                      ],
+                                         "behavior":  "forage",
+                                         "speed":  0.8
+                                     }
+                      }
+                  ],
+    "plants":  [
+                   {
+                       "plantKey":  "vallisneria",
+                       "position":  "background",
+                       "quantity":  3
+                   },
+                   {
+                       "plantKey":  "rotala",
+                       "position":  "background",
+                       "quantity":  2
+                   },
+                   {
+                       "plantKey":  "java_fern",
+                       "position":  "midground",
+                       "quantity":  2
+                   },
+                   {
+                       "plantKey":  "anubias",
+                       "position":  "midground",
+                       "quantity":  2
+                   },
+                   {
+                       "plantKey":  "moss",
+                       "position":  "midground",
+                       "quantity":  2
+                   },
+                   {
+                       "plantKey":  "carpet_grass",
+                       "position":  "foreground",
+                       "quantity":  6
+                   }
+               ],
+    "hardscape":  [
+                      {
+                          "type":  "rock",
+                          "spriteKey":  "seiryu_l",
+                          "quantity":  1
+                      },
+                      {
+                          "type":  "rock",
+                          "spriteKey":  "seiryu_m",
+                          "quantity":  1
+                      },
+                      {
+                          "type":  "rock",
+                          "spriteKey":  "seiryu_s",
+                          "quantity":  2
+                      },
+                      {
+                          "type":  "driftwood",
+                          "spriteKey":  "driftwood_branch",
+                          "quantity":  1
+                      }
+                  ],
+    "water":  {
+                  "temp":  25.5,
+                  "ph":  6.8,
+                  "nitrate":  15,
+                  "measuredAt":  "2026-11-15T08:00:00Z"
+              },
+    "care":  {
+                 "overdue":  [
+                                 "water_change"
+                             ],
+                 "daysSinceWaterChange":  9,
+                 "lastFed":  "2026-11-17T07:30:00Z"
+             },
+    "scene":  {
+                  "props":  [
+
+                            ],
+                  "camera":  {
+                                 "x":  0
+                             }
+              },
+    "warnings":  [
+
+                 ]
+}

@@ -1,0 +1,7 @@
+{
+  "neon_tetra": {"swimZone":["mid"],"behavior":"school","speed":30,"turnRate":2.8,"schoolRadius":92,"bodyBend":2,"finFlutter":0.5,"nameVi":"Neon xanh","sciName":"Paracheirodon innesi","tempRange":[20,26],"phRange":[5,7.5]},
+  "betta": {"swimZone":["top","mid"],"behavior":"wander","speed":13,"turnRate":1.2,"schoolRadius":45,"bodyBend":2,"finFlutter":2.5,"nameVi":"Betta (Xiêm)","sciName":"Betta splendens","tempRange":[24,30],"phRange":[6,8]},
+  "angelfish": {"swimZone":["mid"],"behavior":"hover","speed":9,"turnRate":0.65,"schoolRadius":65,"bodyBend":1,"finFlutter":0.8,"nameVi":"Thần tiên","sciName":"Pterophyllum scalare","tempRange":[24,30],"phRange":[6,7.5]},
+  "guppy": {"swimZone":["top","mid"],"behavior":"wander","speed":38,"turnRate":3.2,"schoolRadius":72,"bodyBend":2,"finFlutter":2,"nameVi":"Bảy màu","sciName":"Poecilia reticulata","tempRange":[22,28],"phRange":[6.8,8]},
+  "panda_cory": {"swimZone":["bottom"],"behavior":"forage","speed":17,"turnRate":2,"schoolRadius":52,"bodyBend":1,"finFlutter":0.5,"nameVi":"Chuột Panda","sciName":"Corydoras panda","tempRange":[20,25],"phRange":[6,7.5]}
+}

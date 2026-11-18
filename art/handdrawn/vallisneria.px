@@ -1,0 +1,62 @@
+# Vallisneria 32x112, neo đáy: 6 lá dải ruy-băng uốn cong. Vẽ tay bởi Claude.
+# Mỗi lá rộng 2px: c (mép đón sáng) + b (mép khuất); d = đầu lá non; e = điểm sáng; a = gốc
+SIZE 32 112
+C a #3F6B4A
+C b #5E8C61
+C c #7FA86A
+C d #A8C686
+C e #CFE3A8
+
+# Lá 1 — cong sang trái
+V 8 100 111 cb
+V 7 85 99 cb
+V 6 70 84 cb
+V 5 55 69 cb
+V 4 40 54 cb
+V 3 28 39 cb
+V 2 20 27 cb
+P 3,18:d 3,19:d
+P 4,46:e 5,62:e
+# Lá 2 — cao nhất, gần thẳng, ngọn quặp phải
+V 12 95 111 cb
+V 11 60 94 cb
+V 10 8 59 cb
+P 11,4:d 11,5:d 11,6:d 11,7:d
+P 10,30:e 11,75:e
+# Lá 3 — thẳng rồi nghiêng phải ở ngọn
+V 15 40 111 cb
+V 16 20 39 cb
+V 17 12 19 cb
+P 18,8:d 18,9:d 18,10:d 18,11:d
+P 15,58:e 16,27:e
+# Lá 4 — cong đều sang phải
+V 18 90 111 cb
+V 19 75 89 cb
+V 20 60 74 cb
+V 21 45 59 cb
+V 22 32 44 cb
+V 23 22 31 cb
+V 24 16 21 cb
+P 25,14:d 25,15:d
+P 21,50:e 23,26:e
+# Lá 5 — vươn xa sang phải, rủ xuống
+V 21 95 111 cb
+V 22 80 94 cb
+V 23 66 79 cb
+V 24 54 65 cb
+V 25 44 53 cb
+V 26 36 43 cb
+V 27 30 35 cb
+V 28 26 29 cb
+P 29,24:d 29,25:d
+P 24,60:e
+# Lá 6 — lá non ngắn
+V 24 98 111 cb
+V 25 84 97 cb
+V 26 72 83 cb
+V 27 64 71 cb
+P 28,60:d 28,61:d 28,62:d 28,63:d
+
+# Gốc
+P 7,110:abbbabbbabbbabbbabbba
+P 7,111:aaaaaaaaaaaaaaaaaaaaa

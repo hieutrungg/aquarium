@@ -1,7 +1,7 @@
-import { createPng, bounds, pixel, rgbKey } from './png.mjs';
+import { createPng, bounds, pixel, rgbKey, seamScore } from './png.mjs';
 
 const check = (ok, details) => ({ status: ok ? 'PASS' : 'FAIL', ...details });
-export function inspectSprite(png, palette, { maxColors = 16, padding = 4 } = {}) {
+export function inspectSprite(png, palette, { maxColors = 16, padding = 4, sizes = [{ width: 64, height: 64 }, { width: 96, height: 96 }], anchor = 'center', tile = false } = {}) {
   const allowed = new Set(palette.map(rgbKey)), colors = new Set();
   let invalidPalette = 0, invalidAlpha = 0;
   for (let i = 0; i < png.data.length; i += 4) {
@@ -19,10 +19,13 @@ export function inspectSprite(png, palette, { maxColors = 16, padding = 4 } = {}
     palette: check(invalidPalette === 0, { invalidPixels: invalidPalette }),
     alpha: check(invalidAlpha === 0, { invalidPixels: invalidAlpha }),
     colors: check(colors.size <= maxColors, { actual: colors.size, maximum: maxColors }),
-    padding: check(!!bbox && Object.values(margins).every(n => n >= padding), { minimum: padding, actual: margins, ...(bbox ? {} : { reason: 'Empty sprite' }) }),
-    canvas: check(png.width === png.height && [64, 96].includes(png.width), { width: png.width, height: png.height })
+    padding: tile ? check(true, { skipped: true, reason: 'Tile mode' }) :
+      check(!!bbox && margins.left >= padding && margins.top >= padding && margins.right >= padding &&
+        (anchor === 'bottom' ? margins.bottom === 0 : margins.bottom >= padding),
+      { minimum: padding, actual: margins, ...(anchor === 'bottom' ? { anchor, bottomRequired: 0 } : {}), ...(bbox ? {} : { reason: 'Empty sprite' }) }),
+    canvas: check(sizes.some(s => png.width === s.width && png.height === s.height), { width: png.width, height: png.height })
   };
-  return { status: Object.values(checks).every(c => c.status === 'PASS') ? 'PASS' : 'FAIL', checks, bbox };
+  return { status: Object.values(checks).every(c => c.status === 'PASS') ? 'PASS' : 'FAIL', checks, bbox, ...(tile ? { seamScore: seamScore(png) } : {}) };
 }
 
 const hex = value => [0, 2, 4].map(i => parseInt(value.slice(i, i + 2), 16));
@@ -34,14 +37,15 @@ function fill(png, x, y, width, height, rgb) {
   }
 }
 
-export function contactSheet(sprites) {
+export function contactSheet(sprites, { tile = false } = {}) {
   if (!sprites.length) {
     const png = createPng(40, 40); fill(png, 0, 0, 40, 40, overall); return png;
   }
-  const gap = 8, maxWidth = Math.max(...sprites.map(p => p.width));
+  const repeat = tile ? 3 : 1;
+  const gap = 8, maxWidth = Math.max(...sprites.map(p => p.width)) * repeat;
   const columns = [maxWidth, maxWidth * 4, maxWidth * 4, maxWidth];
   const width = columns.reduce((a, b) => a + b, gap * 5);
-  const height = sprites.reduce((sum, p) => sum + p.height * 4 + gap, gap);
+  const height = sprites.reduce((sum, p) => sum + p.height * repeat * 4 + gap, gap);
   const sheet = createPng(width, height);
   fill(sheet, 0, 0, width, height, overall);
   let rowY = gap;
@@ -49,13 +53,13 @@ export function contactSheet(sprites) {
     let columnX = gap;
     for (let column = 0; column < 4; column++) {
       const scale = column === 1 || column === 2 ? 4 : 1;
-      const w = sprite.width * scale, h = sprite.height * scale;
+      const w = sprite.width * repeat * scale, h = sprite.height * repeat * scale;
       const x = columnX + Math.floor((columns[column] - w) / 2);
-      const y = rowY + Math.floor((sprite.height * 4 - h) / 2);
+      const y = rowY + Math.floor((sprite.height * repeat * 4 - h) / 2);
       fill(sheet, x, y, w, h, column === 2 ? cream : column === 3 ? wall : water);
       // Explicit integer replication: nearest-neighbor at 4x, no native canvas.
-      for (let sy = 0; sy < sprite.height; sy++) for (let sx = 0; sx < sprite.width; sx++) {
-        const i = (sy * sprite.width + sx) * 4, alpha = sprite.data[i + 3] / 255;
+      for (let sy = 0; sy < sprite.height * repeat; sy++) for (let sx = 0; sx < sprite.width * repeat; sx++) {
+        const i = ((sy % sprite.height) * sprite.width + sx % sprite.width) * 4, alpha = sprite.data[i + 3] / 255;
         if (!alpha) continue;
         const rgb = column === 2 ? ink : [...sprite.data.subarray(i, i + 3)];
         const bg = column === 2 ? cream : column === 3 ? wall : water;
@@ -64,7 +68,7 @@ export function contactSheet(sprites) {
       }
       columnX += columns[column] + gap;
     }
-    rowY += sprite.height * 4 + gap;
+    rowY += sprite.height * repeat * 4 + gap;
   }
   return sheet;
 }

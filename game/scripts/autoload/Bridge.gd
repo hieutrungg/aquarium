@@ -41,12 +41,14 @@ func _is_embedded() -> bool:
 
 
 func _load_dev_scene() -> void:
-	var json := FileAccess.get_file_as_string("res://data/dev/sample_scene_nature.json")
+	var stress := "--stress" in OS.get_cmdline_user_args() or "--stress" in OS.get_cmdline_args()
+	var path := "res://data/dev/sample_scene_stress.json" if stress else "res://data/dev/sample_scene_nature.json"
+	var json := FileAccess.get_file_as_string(path)
 	var dto: Variant = JSON.parse_string(json)
 	if dto is Dictionary:
 		_receive("scene:load", dto)
 	else:
-		push_error("Cannot read sample_scene_nature.json")
+		push_error("Cannot read " + path)
 
 
 func send(type: String, payload: Variant = {}) -> void:

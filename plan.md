@@ -313,6 +313,11 @@ art/prompts/<batch>.md ──agy──► art/raw/<key>.png (≈1024px)
 - Báo cáo QA/contact sheet ghi vào `tools/out/`, **không** ghi vào `art/export/`.
 - File thực thi Godot: `D:\GoDot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe` (đường dẫn gốc là một thư mục). Máy mới có export templates **Windows**, thiếu **Web** (`web_nothreads_*.zip`).
 
+**Khi agy hết quota model ảnh** (`gemini-3.1-flash-image` có hạn mức riêng, không hiện trong bảng Usage của model chat):
+Claude **vẽ tay từng pixel** thành file `art/handdrawn/<key>.px` (lưới ký tự = màu palette; lệnh `G` lưới đặc, `P` đặt chuỗi pixel, `V` nét dọc),
+rồi `node tools/pixelgrid/index.mjs <in.px> <out.png>` xuất PNG — script chỉ tô đúng pixel đã ghi, không tự sinh hình.
+Asset vẽ tay đi qua cùng bước QA như asset AI. Phase 1 vẽ tay: `gravel`, `carpet_grass`, `anubias`, `rotala`, `vallisneria`.
+
 - Một loài tối đa **3 lần sinh lại**; sau đó Claude chỉ ra lỗi cụ thể để chỉnh tay trong Aseprite (file `.aseprite` được giữ lại).
 - `art/raw/` không commit (gitignore); `art/source/` và `art/export/` có commit.
 

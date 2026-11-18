@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/ui/InfoCard.gd" id="1"]
+[ext_resource type="Theme" path="res://ui/cozy_theme.tres" id="2"]
+[sub_resource type="StyleBoxEmpty" id="Empty"]
+[node name="InfoCard" type="PanelContainer"]
+visible = false
+offset_left = 12.0
+offset_top = 174.0
+offset_right = 310.0
+offset_bottom = 348.0
+theme = ExtResource("2")
+script = ExtResource("1")
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+[node name="Content" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+[node name="Name" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("Empty")
+[node name="Science" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("Empty")
+[node name="Zone" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("Empty")
+[node name="Warning" type="Label" parent="Margin/Content"]
+custom_minimum_size = Vector2(270, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("Empty")
+autowrap_mode = 2
+[node name="Details" type="Button" parent="Margin/Content"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Xem chi tiết"

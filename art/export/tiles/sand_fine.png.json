@@ -1,0 +1,21 @@
+{
+  "cell": 64,
+  "offset": {
+    "x": 0,
+    "y": 0
+  },
+  "tile": 16,
+  "logicalSize": {
+    "width": 16,
+    "height": 16
+  },
+  "bbox": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "colors": 3,
+  "warnings": [],
+  "seamScore": 0
+}

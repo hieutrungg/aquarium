@@ -1,4 +1,4 @@
-import { createPng, bounds, pixel, rgbKey, fromKey } from './png.mjs';
+import { createPng, bounds, pixel, rgbKey, fromKey, seamScore } from './png.mjs';
 import { nearest } from './palette.mjs';
 
 const near = (a, b, tol) => Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b)) <= tol;
@@ -110,15 +110,18 @@ export function detectGrid(png, mask, forced = 'auto', warnings = []) {
   return { cell, offset: { x: phase('x'), y: phase('y') } };
 }
 
-export function sampleGrid(png, mask, { cell, offset }) {
+export function sampleGrid(png, mask, { cell, cellY = cell, offset }) {
   const firstX = offset.x === 0 ? 0 : offset.x - cell;
-  const firstY = offset.y === 0 ? 0 : offset.y - cell;
-  const width = Math.ceil((png.width - firstX) / cell), height = Math.ceil((png.height - firstY) / cell);
+  const firstY = offset.y === 0 ? 0 : offset.y - cellY;
+  // Convert real grid boundaries only when indexing raw pixels. Epsilon avoids
+  // floating-point roundoff adding a stray row/column on an exact boundary.
+  const ceil = n => Math.ceil(n - 1e-9);
+  const width = ceil((png.width - firstX) / cell), height = ceil((png.height - firstY) / cellY);
   const sampled = createPng(width, height);
   for (let gy = 0; gy < height; gy++) for (let gx = 0; gx < width; gx++) {
-    const x0 = firstX + gx * cell, y0 = firstY + gy * cell;
-    const left = Math.max(0, x0), top = Math.max(0, y0);
-    const right = Math.min(png.width, x0 + cell), bottom = Math.min(png.height, y0 + cell);
+    const x0 = firstX + gx * cell, y0 = firstY + gy * cellY;
+    const left = Math.max(0, ceil(x0)), top = Math.max(0, ceil(y0));
+    const right = Math.min(png.width, ceil(x0 + cell)), bottom = Math.min(png.height, ceil(y0 + cellY));
     let foreground = 0;
     for (let y = top; y < bottom; y++) for (let x = left; x < right; x++) foreground += mask[y * png.width + x];
     if (foreground * 2 < (right - left) * (bottom - top) || !foreground) continue;
@@ -133,8 +136,8 @@ export function sampleGrid(png, mask, { cell, offset }) {
         counts.set(key, (counts.get(key) ?? 0) + 1);
       }
     };
-    tally(Math.max(left, x0 + Math.ceil(cell * 0.2)), Math.max(top, y0 + Math.ceil(cell * 0.2)),
-      Math.min(right, x0 + Math.ceil(cell * 0.8)), Math.min(bottom, y0 + Math.ceil(cell * 0.8)));
+    tally(Math.max(left, ceil(x0 + cell * 0.2)), Math.max(top, ceil(y0 + cellY * 0.2)),
+      Math.min(right, ceil(x0 + cell * 0.8)), Math.min(bottom, ceil(y0 + cellY * 0.8)));
     // A clipped edge cell may have no visible core.
     if (!counts.size) tally(left, top, right, bottom);
     let key = 0, count = 0;
@@ -169,16 +172,43 @@ function quantize(png, palette, maxColors, warnings) {
   return counts.size;
 }
 
-export function normalize(png, palette, { canvas = 64, cell = 'auto', padding = 4, maxColors = 16, bgTol = 24 } = {}) {
+export function normalize(png, palette, options = {}) {
+  const { canvas = 64, cell = 'auto', padding = 4, maxColors = 16, bgTol = 24,
+    targetW, targetH, anchor = 'center', tile } = options;
+  const modes = [options.cell, targetW, targetH, tile].filter(v => v !== undefined);
+  if (modes.length > 1) throw new Error('--cell, --target-w, --target-h and --tile are mutually exclusive');
+  if (!['center', 'bottom'].includes(anchor)) throw new Error('--anchor must be center or bottom');
+  for (const [name, n] of [['target-w', targetW], ['target-h', targetH], ['tile', tile]]) {
+    if (n !== undefined && (!Number.isInteger(n) || n < 1 || n > 1024)) throw new Error(`--${name} must be an integer in 1..1024`);
+  }
   const warnings = [];
+  if (tile !== undefined) {
+    const grid = { cell: png.width / tile, ...(png.width === png.height ? {} : { cellY: png.height / tile }), offset: { x: 0, y: 0 } };
+    const output = sampleGrid(png, new Uint8Array(png.width * png.height).fill(1), grid);
+    const colors = quantize(output, palette, maxColors, warnings);
+    const bbox = { x: 0, y: 0, width: tile, height: tile };
+    return { output, summary: { ...grid, tile, logicalSize: { width: tile, height: tile }, bbox, colors, warnings, seamScore: seamScore(output) } };
+  }
+  const { width: canvasW, height: canvasH } = typeof canvas === 'number' ? { width: canvas, height: canvas } : canvas;
   const mask = foregroundMask(png, bgTol);
-  const grid = detectGrid(png, mask, cell, warnings);
+  let grid;
+  if (targetW !== undefined || targetH !== undefined) {
+    let left = png.width, top = png.height, right = -1, bottom = -1;
+    for (let i = 0; i < mask.length; i++) if (mask[i]) {
+      const x = i % png.width, y = Math.floor(i / png.width);
+      left = Math.min(left, x); top = Math.min(top, y);
+      right = Math.max(right, x); bottom = Math.max(bottom, y);
+    }
+    if (right < 0) throw new Error('No foreground remains after background removal');
+    const size = targetW !== undefined ? (right - left + 1) / targetW : (bottom - top + 1) / targetH;
+    grid = { cell: size, offset: { x: left % size, y: top % size } };
+  } else grid = detectGrid(png, mask, cell, warnings);
   const logical = sampleGrid(png, mask, grid);
   const colors = quantize(logical, palette, maxColors, warnings);
   const sourceBox = bounds(logical);
   if (!sourceBox) throw new Error('No foreground remains after background removal and sampling');
-  if (sourceBox.width + padding * 2 > canvas || sourceBox.height + padding * 2 > canvas) {
-    const error = new Error(`Foreground ${sourceBox.width}x${sourceBox.height} + ${padding}px padding on each side does not fit ${canvas}x${canvas}; use a larger --canvas or correct --cell`);
+  if (sourceBox.width + padding * 2 > canvasW || sourceBox.height + padding * (anchor === 'bottom' ? 1 : 2) > canvasH) {
+    const error = new Error(`Foreground ${sourceBox.width}x${sourceBox.height} + ${padding}px padding (${anchor} anchor) does not fit ${canvasW}x${canvasH}; use a larger --canvas or correct --cell`);
     error.exitCode = 2;
     throw error;
   }
@@ -186,12 +216,12 @@ export function normalize(png, palette, { canvas = 64, cell = 'auto', padding = 
     mask.some((v, i) => v && (i % png.width === 0 || i % png.width === png.width - 1))) {
     warnings.push('Foreground touches the input edge; the source may be clipped.');
   }
-  const bbox = { x: Math.floor((canvas - sourceBox.width) / 2), y: Math.floor((canvas - sourceBox.height) / 2), width: sourceBox.width, height: sourceBox.height };
-  const output = createPng(canvas, canvas);
+  const bbox = { x: Math.floor((canvasW - sourceBox.width) / 2), y: anchor === 'bottom' ? canvasH - sourceBox.height : Math.floor((canvasH - sourceBox.height) / 2), width: sourceBox.width, height: sourceBox.height };
+  const output = createPng(canvasW, canvasH);
   for (let y = 0; y < bbox.height; y++) for (let x = 0; x < bbox.width; x++) {
     const src = ((sourceBox.y + y) * logical.width + sourceBox.x + x) * 4;
-    output.data.set(logical.data.subarray(src, src + 4), ((bbox.y + y) * canvas + bbox.x + x) * 4);
+    output.data.set(logical.data.subarray(src, src + 4), ((bbox.y + y) * canvasW + bbox.x + x) * 4);
   }
-  const summary = { ...grid, logicalSize: { width: logical.width, height: logical.height }, bbox, colors, warnings };
-  return { output, summary, pivot: { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height / 2 } };
+  const summary = { ...grid, logicalSize: { width: logical.width, height: logical.height }, bbox, colors, warnings, anchor };
+  return { output, summary, pivot: { x: bbox.x + bbox.width / 2, y: bbox.y + bbox.height / (anchor === 'bottom' ? 1 : 2) } };
 }

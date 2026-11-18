@@ -1,0 +1,9 @@
+{
+  "anchor": "bottom",
+  "pivot": {
+    "x": 16,
+    "y": 96
+  },
+  "source": "handdrawn",
+  "file": "art/handdrawn/rotala.px"
+}

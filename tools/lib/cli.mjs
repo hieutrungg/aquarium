@@ -14,3 +14,14 @@ export function integer(value, name, min = 1, max = 16384) {
 export function required(values, names) {
   for (const name of names) if (!values[name]) throw new Error(`Missing --${name}; use --help`);
 }
+
+export function dimensions(value, name = 'canvas', allowSquare = true) {
+  const match = (allowSquare ? /^(\d+)(?:x(\d+))?$/i : /^(\d+)x(\d+)$/i).exec(String(value));
+  if (!match) throw new Error(`--${name} must be ${allowSquare ? 'a size or ' : ''}WxH`);
+  return { width: integer(match[1], name, 1, 1024), height: integer(match[2] ?? match[1], name, 1, 1024) };
+}
+
+export function anchorOption(value = 'center') {
+  if (!['center', 'bottom'].includes(value)) throw new Error('--anchor must be center or bottom');
+  return value;
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readdir } from 'node:fs/promises';
 import { resolve, join, relative } from 'node:path';
-import { args, integer, required, defaultPalette } from '../lib/cli.mjs';
+import { args, integer, required, defaultPalette, dimensions, anchorOption } from '../lib/cli.mjs';
 import { readPalette } from '../lib/palette.mjs';
 import { readPng, writePng, writeJson } from '../lib/png.mjs';
 import { inspectSprite, contactSheet } from '../lib/qa.mjs';
@@ -11,6 +11,9 @@ Usage: node sprite-qa/index.mjs --dir <sprites> --report <out.json> --sheet <con
   --palette <gpl>   GIMP palette (default: art/palette/aquaverse.gpl in this repo)
   --max-colors <n>  Maximum visible colors (default: 16)
   --padding <n>     Minimum transparent pixels on each side (default: 4)
+  --sizes <WxH,...> Accepted canvases (default: 64x64,96x96)
+  --anchor <mode>   center (default) or bottom; bottom must touch the canvas edge
+  --tile           Skip padding; contact sheet repeats each tile 3x3
   --help, -h        Show this help
 Scans PNGs recursively in sorted order. Contact sheet columns:
 1x water, 4x water, 4x silhouette on cream, 1x wall. Gap: 8px.
@@ -27,12 +30,14 @@ async function collect(dir) {
 }
 
 try {
-  const values = args(Object.fromEntries(['dir', 'palette', 'max-colors', 'padding', 'report', 'sheet'].map(k => [k, { type: 'string' }])));
+  const values = args({ ...Object.fromEntries(['dir', 'palette', 'max-colors', 'padding', 'sizes', 'anchor', 'report', 'sheet'].map(k => [k, { type: 'string' }])), tile: { type: 'boolean' } });
   if (values.help) console.log(help);
   else {
     required(values, ['dir', 'report', 'sheet']);
     if (resolve(values.report) === resolve(values.sheet)) throw new Error('--report and --sheet must differ');
-    const options = { maxColors: integer(values['max-colors'] ?? 16, 'max-colors', 1, 256), padding: integer(values.padding ?? 4, 'padding', 0, 1024) };
+    const options = { maxColors: integer(values['max-colors'] ?? 16, 'max-colors', 1, 256), padding: integer(values.padding ?? 4, 'padding', 0, 1024),
+      sizes: (values.sizes ?? '64x64,96x96').split(',').map(s => dimensions(s.trim(), 'sizes', false)),
+      anchor: anchorOption(values.anchor), tile: values.tile ?? false };
     const palette = await readPalette(values.palette ?? defaultPalette);
     // Exclude our own generated sheet when QA is run again in the same directory.
     const paths = (await collect(values.dir)).filter(p => resolve(p).toLowerCase() !== resolve(values.sheet).toLowerCase());
@@ -53,7 +58,7 @@ try {
     const report = { status: paths.length > 0 && passed === files.length ? 'PASS' : 'FAIL',
       summary: { total: files.length, passed, failed: files.length - passed },
       options, ...(paths.length ? {} : { errors: ['No PNG sprites found'] }), files };
-    await writePng(values.sheet, contactSheet(sprites));
+    await writePng(values.sheet, contactSheet(sprites, options));
     await writeJson(values.report, report);
     console.log(JSON.stringify(report));
     if (report.status === 'FAIL') process.exitCode = 1;

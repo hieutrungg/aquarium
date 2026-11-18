@@ -1,0 +1,29 @@
+# Sỏi suối 16x16, liền mạch 4 cạnh. Vẽ tay bởi Claude.
+# k = khe (vữa), sỏi nâu: l sáng / g thân / j bóng; sỏi xám: i / h / m; sỏi nhạt: n / i / h
+SIZE 16 16
+C k #6E7D74
+C l #E8D9B5
+C g #CDB98F
+C j #9C8463
+C i #C3CBC1
+C h #9AA59B
+C m #4F5B55
+C n #F4ECD6
+G 0 0
+lgjkiiimknihkihm
+lgjkihhhmknhkihm
+jjkmmhhmkniihkim
+kknnkmmmkhhhkkmk
+kniinkkkllkkknnk
+khhiinklgglkniin
+iikhhhklggjkniih
+ihikkkjjjjkkhhhk
+ihmkllkkkkiikkll
+mmklgglkiihhklgj
+kkkjggjkihhmklgj
+nnkkjjkmmmmkkjjk
+ninkkkkkkknnnkkk
+hhhkiiiknniihhkk
+llkihhmkhhhhkiik
+lglkmmkimknnkihm
+END

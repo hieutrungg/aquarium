@@ -25,3 +25,14 @@ export function bounds(png) {
   }
   return right < 0 ? null : { x: left, y: top, width: right - left + 1, height: bottom - top + 1 };
 }
+
+// Mean normalized RGBA difference of opposite edge pairs; 0 means exact seams.
+export function seamScore(png) {
+  let difference = 0;
+  const compare = (a, b) => {
+    for (let k = 0; k < 4; k++) difference += Math.abs(png.data[a * 4 + k] - png.data[b * 4 + k]);
+  };
+  for (let y = 0; y < png.height; y++) compare(y * png.width, y * png.width + png.width - 1);
+  for (let x = 0; x < png.width; x++) compare(x, (png.height - 1) * png.width + x);
+  return difference / ((png.width + png.height) * 4 * 255);
+}

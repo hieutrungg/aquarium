@@ -1,0 +1,49 @@
+# Anubias nana 48x40, neo đáy. Vẽ tay bởi Claude.
+# a viền/gân lá, b nửa lá khuất sáng, c nửa lá đón sáng, d bóng loáng, w/x thân rễ gỗ
+SIZE 48 40
+C a #3F6B4A
+C b #5E8C61
+C c #7FA86A
+C d #A8C686
+C w #4A3A2E
+C x #8B6B4E
+
+# --- Lá trái (nghiêng trái, lớp sau) ---
+P 10,8:a 9,9:aaa 8,10:acaba 8,11:accabba 8,12:accabba
+P 8,13:acccabbba 8,14:acccabbba 9,15:acccabbba 9,16:acccabbba
+P 10,17:acccabbba 10,18:acccabbba 11,19:acccabbba
+P 12,20:accabba 13,21:accabba 13,22:accabba 15,23:acaba 15,24:acaba 17,25:aaa 18,26:a
+P 9,12:d 9,13:d
+# --- Lá phải (nghiêng phải, lớp sau) ---
+P 38,7:a 37,8:aaa 36,9:acaba 34,10:accabba 34,11:accabba
+P 32,12:acccabbba 32,13:acccabbba 31,14:acccabbba 31,15:acccabbba 31,16:acccabbba
+P 30,17:acccabbba 31,18:accabba 30,19:accabba 30,20:accabba
+P 30,21:acaba 30,22:acaba 30,23:aaa 31,24:a
+P 33,12:d 33,13:d
+# --- Cuống lá sau ---
+P 19,27:a 19,28:a 20,29:a 20,30:a 21,31:a 21,32:a 22,33:a 22,34:a
+P 30,25:a 30,26:a 29,27:a 29,28:a 28,29:a 28,30:a 28,31:a 27,32:a 27,33:a 27,34:a
+# --- Lá giữa (đứng thẳng, lớp trước) ---
+P 24,1:a 23,2:aaa 22,3:acaba 21,4:accabba 21,5:accabba
+V 20 6 9 acccabbba
+V 19 10 13 accccabbbba
+V 20 14 16 acccabbba
+P 21,17:accabba 22,18:acaba 23,19:aaa
+V 24 20 34 ab
+P 22,4:d 22,5:d 21,7:d 21,8:d 20,11:d
+# --- Lá thấp trái (nằm ngang) ---
+P 4,26:aaaaaa 2,27:acccccccccca 1,28:accccccccccca
+P 1,29:acaaaaaaaaaaba 1,30:abbbbbbbbbbbba 2,31:abbbbbbbbbba 4,32:aaaaaaaa
+P 3,28:dd
+P 15,30:a 15,31:a 16,32:a 17,33:a 18,34:a
+# --- Lá thấp phải (nằm ngang) ---
+P 38,23:aaaaaa 36,24:acccccccccca 35,25:accccccccccca
+P 34,26:acaaaaaaaaaaa 34,27:abbbbbbbbbbba 35,28:abbbbbbbbbba 37,29:aaaaaaaa
+P 37,25:dd
+P 33,28:a 32,29:a 31,30:a 31,31:a 30,32:a 30,33:a 29,34:a
+# --- Thân rễ & rễ ---
+P 8,35:wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw
+P 7,36:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+P 10,37:w 16,37:w 23,37:w 30,37:w 37,37:w
+P 9,38:w 17,38:w 22,38:w 31,38:w 38,38:w
+P 9,39:w 21,39:w 39,39:w

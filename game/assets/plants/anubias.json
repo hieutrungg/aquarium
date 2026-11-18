@@ -1,0 +1,9 @@
+{
+  "anchor": "bottom",
+  "pivot": {
+    "x": 24,
+    "y": 40
+  },
+  "source": "handdrawn",
+  "file": "art/handdrawn/anubias.px"
+}

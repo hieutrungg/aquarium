@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/PixelStage.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/main.tscn" id="2"]
+
+[node name="PixelStage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture_filter = 1
+script = ExtResource("1")
+
+[node name="Frame" type="SubViewportContainer" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 1
+texture_filter = 1
+
+[node name="Viewport" type="SubViewport" parent="Frame"]
+size = Vector2i(640, 360)
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+render_target_update_mode = 4
+
+[node name="Main" parent="Frame/Viewport" instance=ExtResource("2")]

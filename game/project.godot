@@ -3,7 +3,8 @@ config_version=5
 
 [application]
 config/name="AquaVerse Tank"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/pixel_stage.tscn"
+boot_splash/bg_color=Color(0.917647, 0.964706, 0.94902, 1)
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]

@@ -1,0 +1,26 @@
+# Thảm cỏ Monte Carlo 64x16 (4 khóm 16 cột ghép lại), neo đáy. Vẽ tay bởi Claude.
+# a tối nhất (gốc) / b / c thân lá / d lá sáng / e điểm sáng
+SIZE 64 16
+C a #3F6B4A
+C b #5E8C61
+C c #7FA86A
+C d #A8C686
+C e #CFE3A8
+G 0 0
+................................................................
+.................de.....................................de......
+.......de.......dccd.de..........................de....dccd.....
+..de..dccd...de.dcbbcddccd..........de.....de...dccd.de.dcbbcde.
+.dccd.cbbcdeddccddcbccbcbbccd.de..dedccd...dccd.cbbcdccdccbccccd
+dcbbcdeccdcccbbccbcdecbccbcddccddccdcbbcdedcbbcdbccbcbbccdecbbcc
+cbccbccbbcdeccbcbccccbcdecbccbbccbbcbccdccdcbccbcdecbccbcccbccbc
+bcdecbbcccccbcdbcbdecbcbccbdeccbbccbcdecbbccdecccccbcdecbcbcdecb
+cdccbcdeccbdecbcbcccbccbcdccccbccbcdccbccbcbccbcbcbccbcccbccccbc
+bccbbccbcbcccbcbcbcbcdecbccbcbcbbccbcbcbccdecbcbcbccbcbbcdecbcbc
+cbcdecbbcdecbcbcbcbbccbcbbcdecbbcbcdecbbcbccbbccbcdecbcbcccbcbcb
+bcbccbcbbccbcbbbbbcbbcbbcbbccbbbbbcbcbbcbbcbcbbbbbcbbcbbbcbbcbbb
+bbcbbcbbbcbbcbabbbbabbbbabbbbbabbabbbabbbabbbabbbbabbbbabbbbabbb
+babbbbabbbabbbbaabbbababbbabbabbabbabbabbabbabbaabbbabbabbabbbab
+abbababbabbaababbabaabbababbaababababbabbaabbabbbabbababbabbabba
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+END
